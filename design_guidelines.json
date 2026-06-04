@@ -1,0 +1,83 @@
+{
+  "theme": "light",
+  "archetype": "1 (Organic & Earthy) blended with Modern Healthcare",
+  "typography": {
+    "heading_font": "Outfit",
+    "body_font": "DM Sans",
+    "hierarchy": {
+      "h1": "text-5xl md:text-6xl tracking-tight font-semibold text-[#163A5F]",
+      "h2": "text-3xl md:text-4xl tracking-tight font-medium text-[#163A5F]",
+      "h3": "text-xl md:text-2xl font-medium text-[#163A5F]",
+      "body": "text-base md:text-lg leading-relaxed text-[#163A5F]/80",
+      "label": "text-sm uppercase tracking-[0.2em] font-bold text-[#2CB1BC]"
+    }
+  },
+  "colors": {
+    "primary": "#163A5F",
+    "secondary": "#2CB1BC",
+    "accent": "#F4B942",
+    "background": "#FFFFFF",
+    "surface": "#F7F9FC",
+    "text_main": "#163A5F",
+    "text_muted": "#4A627A",
+    "border": "#E2E8F0",
+    "cta": "#2CB1BC",
+    "cta_hover": "#22929B"
+  },
+  "spacing_and_layout": {
+    "section_padding": "py-20 md:py-32",
+    "container": "max-w-7xl mx-auto px-4 md:px-8",
+    "border_radius": "rounded-2xl md:rounded-[2rem]",
+    "card_padding": "p-8 md:p-12",
+    "grid_gap": "gap-8 md:gap-12"
+  },
+  "surfaces": {
+    "cards": "bg-white border border-[#163A5F]/5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
+    "header": "backdrop-blur-xl bg-white/80 border-b border-[#163A5F]/5 sticky top-0 z-50",
+    "footer": "bg-[#163A5F] text-white py-20"
+  },
+  "media": {
+    "logo_url": "https://customer-assets.emergentagent.com/job_9999b4e2-e562-4f7d-b65c-b27bad5fffb6/artifacts/7m2ruj3w_brain-with-pencil1.png",
+    "hero_image": "https://images.pexels.com/photos/6255806/pexels-photo-6255806.jpeg",
+    "team_member_image": "https://images.pexels.com/photos/12660379/pexels-photo-12660379.jpeg",
+    "services_images": [
+      "https://images.pexels.com/photos/8653951/pexels-photo-8653951.jpeg",
+      "https://images.pexels.com/photos/4934170/pexels-photo-4934170.jpeg",
+      "https://images.pexels.com/photos/31864414/pexels-photo-31864414.jpeg"
+    ],
+    "insurance_logos": [
+      "https://images.pexels.com/photos/6519850/pexels-photo-6519850.jpeg",
+      "https://images.pexels.com/photos/15735064/pexels-photo-15735064.jpeg"
+    ],
+    "general_images": [
+      "https://images.pexels.com/photos/5094681/pexels-photo-5094681.jpeg"
+    ]
+  },
+  "components_strategy": {
+    "buttons": "rounded-full px-8 py-4 font-semibold transition-colors duration-200. Primary: bg-[#2CB1BC] text-white hover:bg-[#22929B]. Secondary: bg-white text-[#163A5F] border border-[#163A5F]/20 hover:bg-[#F7F9FC].",
+    "inputs": "Shadcn components heavily styled to match. rounded-xl bg-white border-[#163A5F]/10 focus:ring-2 focus:ring-[#2CB1BC]/50",
+    "navigation": "Desktop visible links, mobile hamburger. Active states with subtle #2CB1BC underline or dot.",
+    "badges": "bg-[#F4B942]/10 text-[#163A5F] font-bold rounded-full px-4 py-1 text-sm"
+  },
+  "animation_and_motion": {
+    "hover_states": "translate-y-[-2px] shadow-lg",
+    "page_transitions": "opacity fade in, slight upward translate on scroll for sections",
+    "icons": "Subtle scale on hover"
+  },
+  "accessibility_and_testing": {
+    "contrast": "Ensure text-[#163A5F] meets APCA standards against #F7F9FC and #FFFFFF. White text against #2CB1BC and #163A5F is AA compliant.",
+    "testing_attributes": "All interactive elements MUST have data-testid attributes (e.g., data-testid='hero-cta-button')."
+  },
+  "instructions_to_main_agent": [
+    "Build a multi-page routing structure using React Router (if applicable) or handle view states if SPA.",
+    "Use Outfit for Headings and DM Sans for Body font. Install via Google Fonts.",
+    "For the hero section, avoid a flat overlay; use a gentle gradient overlay or soft glassmorphism card for text to ensure readability over the background image.",
+    "Use lucide-react for all icons, keeping stroke width around 1.5 or 2 for a clean, modern look.",
+    "Include the data-testid attributes on all buttons, links, accordion triggers, and form elements.",
+    "Keep spacing extremely generous, especially between major sections (py-24 or py-32).",
+    "Apply the rounded-2xl or rounded-3xl styles to images, cards, and buttons to evoke the approachable 'Airbnb' style.",
+    "The footer should be dark (bg-[#163A5F]) to provide contrast from the rest of the light theme.",
+    "For the Team section, use a grid layout with the provided portrait for the Clinical Director placeholder.",
+    "Ensure all Shadcn components (if used) are stripped of the default 'Vercel' look and styled to match these guidelines."
+  ]
+}
