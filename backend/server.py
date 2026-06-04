@@ -5,8 +5,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from typing import List, Dict, Any, Optional
 import uuid
 from datetime import datetime, timezone
 
@@ -37,6 +37,30 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+class LeadCreate(BaseModel):
+    kind: str = Field(..., min_length=2, max_length=40)
+    name: str = Field(..., min_length=2, max_length=120)
+    email: EmailStr
+    phone: Optional[str] = Field(default=None, max_length=40)
+    child_age: Optional[str] = Field(default=None, max_length=40)
+    insurance: Optional[str] = Field(default=None, max_length=120)
+    city: Optional[str] = Field(default=None, max_length=80)
+    message: Optional[str] = Field(default=None, max_length=1500)
+
+class LeadResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str
+    kind: str
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    child_age: Optional[str] = None
+    insurance: Optional[str] = None
+    city: Optional[str] = None
+    message: Optional[str] = None
+    created_at: str
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
@@ -65,6 +89,14 @@ async def get_status_checks():
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
+
+@api_router.post("/leads", response_model=LeadResponse)
+async def create_lead(input: LeadCreate):
+    lead_doc = input.model_dump()
+    lead_doc["id"] = str(uuid.uuid4())
+    lead_doc["created_at"] = datetime.now(timezone.utc).isoformat()
+    await db.leads.insert_one(lead_doc.copy())
+    return lead_doc
 
 # Include the router in the main app
 app.include_router(api_router)

@@ -1,55 +1,921 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  NavLink,
+  useLocation,
+} from "react-router-dom";
 import axios from "axios";
-import { HOME } from "@/constants/testIds";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { Toaster, toast } from "@/components/ui/sonner";
+import {
+  ArrowRight,
+  BadgeCheck,
+  BookOpenCheck,
+  Brain,
+  BriefcaseBusiness,
+  CalendarCheck,
+  Check,
+  ChevronDown,
+  ClipboardCheck,
+  GraduationCap,
+  HandHeart,
+  HeartHandshake,
+  Home as HomeIcon,
+  Menu,
+  MessageCircleHeart,
+  PhoneCall,
+  School,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const Home = () => {
-  const helloWorldApi = async () => {
+const assets = {
+  logo: "https://customer-assets.emergentagent.com/job_9999b4e2-e562-4f7d-b65c-b27bad5fffb6/artifacts/7m2ruj3w_brain-with-pencil1.png",
+  hero: "https://images.pexels.com/photos/7447263/pexels-photo-7447263.jpeg",
+  parent: "https://images.pexels.com/photos/8653951/pexels-photo-8653951.jpeg",
+  team: "https://images.pexels.com/photos/12660379/pexels-photo-12660379.jpeg",
+  services: "https://images.pexels.com/photos/4934170/pexels-photo-4934170.jpeg",
+  careers: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg",
+  about: "https://images.pexels.com/photos/8363095/pexels-photo-8363095.jpeg",
+};
+
+const serviceAreas = [
+  "Spring",
+  "Klein",
+  "The Woodlands",
+  "Conroe",
+  "Humble",
+  "Tomball",
+  "Magnolia",
+];
+
+const navItems = [
+  { label: "Home", path: "/" },
+  { label: "Services", path: "/services" },
+  { label: "Insurance", path: "/insurance" },
+  { label: "About Us", path: "/about" },
+  { label: "Careers", path: "/careers" },
+];
+
+const services = [
+  {
+    title: "ABA Therapy",
+    icon: Brain,
+    summary:
+      "Individualized in-home therapy focused on communication, behavior, independence, social skills, and daily routines.",
+    detail:
+      "Our ABA programs are designed around each child's strengths, needs, family routines, and long-term goals. Care plans are BCBA-led and adjusted as progress is made.",
+  },
+  {
+    title: "Parent Training",
+    icon: HandHeart,
+    summary:
+      "Practical coaching that helps caregivers feel confident supporting progress between therapy sessions.",
+    detail:
+      "Families learn strategies they can use during meals, transitions, play, homework, community outings, and everyday moments at home.",
+  },
+  {
+    title: "Assessments",
+    icon: ClipboardCheck,
+    summary:
+      "Thoughtful skill and behavior assessments that guide goals, treatment planning, and insurance authorization.",
+    detail:
+      "We use observation, caregiver input, records review, and standardized tools to understand what support will be most meaningful.",
+  },
+  {
+    title: "School Collaboration",
+    icon: School,
+    summary:
+      "Coordination with educators and school teams to support consistency across learning environments.",
+    detail:
+      "When appropriate, we partner with schools and special education teams to align strategies and strengthen real-world skill use.",
+  },
+];
+
+const whyChooseUs = [
+  [BadgeCheck, "BCBA-Led Treatment", "Clinical oversight from experienced behavior analysts."],
+  [BookOpenCheck, "Individualized Programs", "Goals are built around each child and family."],
+  [HeartHandshake, "Family Partnership", "Parents are included, respected, and supported."],
+  [HomeIcon, "Real-Life Skill Development", "Therapy happens where children live and learn."],
+  [CalendarCheck, "Flexible Service Delivery", "In-home care shaped around family routines."],
+  [GraduationCap, "Education-Informed Care", "Teaching expertise meets evidence-based ABA."],
+];
+
+const faqs = [
+  {
+    q: "What is ABA therapy?",
+    a: "Applied Behavior Analysis is an evidence-based therapy that helps children build meaningful skills while reducing behaviors that interfere with learning, safety, or independence.",
+  },
+  {
+    q: "Do you accept Medicaid?",
+    a: "Yes. We currently list Texas Children's Health Plan among accepted plans and can help families verify benefits before beginning services.",
+  },
+  {
+    q: "Are you accepting new clients?",
+    a: "Yes. Au-Some Teacher ABA Services is currently accepting new clients throughout the Greater Houston area.",
+  },
+  {
+    q: "Where do services take place?",
+    a: "Services are provided in the home and may include collaboration with caregivers, schools, and other providers when appropriate.",
+  },
+  {
+    q: "What ages do you serve?",
+    a: "We support children and teens with autism from ages 2 through 18.",
+  },
+];
+
+const testimonials = [
+  {
+    quote:
+      "Au-Some Teacher helped our family understand the next step. We felt supported from the first conversation.",
+    name: "Parent of a 5-year-old",
+  },
+  {
+    quote:
+      "The team is professional, warm, and truly focused on practical progress at home and school.",
+    name: "Houston-area parent",
+  },
+  {
+    quote:
+      "We appreciate the communication, parent coaching, and the way goals connect to real daily routines.",
+    name: "Caregiver testimonial",
+  },
+];
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+}
+
+function Logo({ footer = false }) {
+  return (
+    <Link
+      to="/"
+      className="flex items-center gap-3 rounded-full focus:outline-none focus:ring-2 focus:ring-teal"
+      data-testid={footer ? "footer-logo-link" : "header-logo-link"}
+      aria-label="Au-Some Teacher ABA Services home"
+    >
+      <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-navy/10">
+        <img
+          src={assets.logo}
+          alt="Au-Some Teacher ABA Services logo"
+          className="h-12 w-12 object-cover object-center"
+          data-testid={footer ? "footer-logo-image" : "header-logo-image"}
+        />
+      </span>
+      <span className="leading-tight">
+        <span
+          className={`block font-display text-base font-semibold tracking-tight ${footer ? "text-white" : "text-navy"}`}
+          data-testid={footer ? "footer-brand-name" : "header-brand-name"}
+        >
+          Au-Some Teacher
+        </span>
+        <span
+          className={`block text-xs font-semibold ${footer ? "text-white/70" : "text-navy/60"}`}
+          data-testid={footer ? "footer-brand-subtitle" : "header-brand-subtitle"}
+        >
+          ABA Services
+        </span>
+      </span>
+    </Link>
+  );
+}
+
+function Header() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-navy/5 bg-white/85 backdrop-blur-xl" data-testid="site-header">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
+        <Logo />
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation" data-testid="desktop-navigation">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
+                  isActive ? "bg-teal/10 text-navy" : "text-navy/70 hover:bg-slate hover:text-navy"
+                }`
+              }
+              data-testid={`desktop-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+          <div className="group relative">
+            <button
+              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-navy/70 transition-colors hover:bg-slate hover:text-navy"
+              data-testid="desktop-services-dropdown-button"
+              aria-label="Open service submenu"
+            >
+              Service Details <ChevronDown className="h-4 w-4" />
+            </button>
+            <div className="invisible absolute left-0 top-full w-72 translate-y-2 rounded-3xl border border-navy/10 bg-white p-3 opacity-0 shadow-2xl shadow-navy/10 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              {services.map((service) => (
+                <Link
+                  key={service.title}
+                  to="/services"
+                  className="block rounded-2xl px-4 py-3 text-sm font-semibold text-navy transition-colors hover:bg-slate"
+                  data-testid={`desktop-dropdown-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}
+                >
+                  {service.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </nav>
+        <div className="hidden items-center gap-3 lg:flex">
+          <Button asChild className="rounded-full bg-teal px-6 py-5 font-bold text-white hover:bg-teal-dark" data-testid="header-become-client-button">
+            <Link to="/become-a-client">Become a Client</Link>
+          </Button>
+        </div>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="rounded-full border-navy/10 lg:hidden" data-testid="mobile-menu-open-button" aria-label="Open menu">
+              <Menu className="h-5 w-5 text-navy" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="w-[88vw] border-l-0 bg-white p-6" data-testid="mobile-menu-panel">
+            <div className="mt-8 flex flex-col gap-6">
+              <Logo />
+              <nav className="flex flex-col gap-2" aria-label="Mobile navigation" data-testid="mobile-navigation">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setOpen(false)}
+                    className="rounded-2xl bg-slate px-5 py-4 font-display text-lg font-semibold text-navy"
+                    data-testid={`mobile-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                <Link
+                  to="/become-a-client"
+                  onClick={() => setOpen(false)}
+                  className="rounded-2xl bg-teal px-5 py-4 text-center font-display text-lg font-semibold text-white"
+                  data-testid="mobile-nav-become-client-link"
+                >
+                  Become a Client
+                </Link>
+              </nav>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </header>
+  );
+}
+
+function SectionLabel({ children, testId }) {
+  return (
+    <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-teal" data-testid={testId}>
+      {children}
+    </p>
+  );
+}
+
+function PageHero({ eyebrow, title, text, image, cta = true, testId }) {
+  return (
+    <section className="relative overflow-hidden bg-slate py-16 md:py-24" data-testid={testId}>
+      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 md:grid-cols-[1.05fr_0.95fr] md:px-8">
+        <div className="relative z-10">
+          <SectionLabel testId={`${testId}-eyebrow`}>{eyebrow}</SectionLabel>
+          <h1 className="max-w-4xl font-display text-4xl font-semibold tracking-tight text-navy sm:text-5xl lg:text-6xl" data-testid={`${testId}-title`}>
+            {title}
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-navy/75 md:text-lg" data-testid={`${testId}-text`}>
+            {text}
+          </p>
+          {cta && (
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button asChild className="rounded-full bg-teal px-8 py-6 font-bold text-white hover:bg-teal-dark" data-testid={`${testId}-primary-button`}>
+                <Link to="/become-a-client">Become a Client</Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-full border-navy/15 bg-white px-8 py-6 font-bold text-navy hover:bg-white" data-testid={`${testId}-secondary-button`}>
+                <Link to="/insurance">Verify Insurance</Link>
+              </Button>
+            </div>
+          )}
+        </div>
+        <div className="relative z-10">
+          <div className="aspect-[4/3] overflow-hidden rounded-[2rem] bg-white p-2 shadow-2xl shadow-navy/10">
+            <img src={image} alt="Warm therapy support" className="h-full w-full rounded-[1.5rem] object-cover object-center" data-testid={`${testId}-image`} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative overflow-hidden bg-white" data-testid="homepage-hero-section">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(244,185,66,0.22),transparent_28%),radial-gradient(circle_at_80%_4%,rgba(44,177,188,0.20),transparent_24%)]" />
+      <div className="mx-auto grid min-h-[760px] max-w-7xl items-center gap-12 px-4 py-16 md:grid-cols-[1.03fr_0.97fr] md:px-8 md:py-24">
+        <div className="relative z-10">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-4 py-2 text-sm font-bold text-navy" data-testid="hero-accepting-clients-badge">
+            <Sparkles className="h-4 w-4 text-teal" /> Currently Accepting New Clients
+          </div>
+          <h1 className="max-w-4xl font-display text-5xl font-semibold leading-[0.96] tracking-tight text-navy sm:text-6xl lg:text-7xl" data-testid="hero-headline">
+            Teaching Skills. Building Confidence. Changing Futures.
+          </h1>
+          <p className="mt-7 max-w-2xl text-base leading-relaxed text-navy/75 md:text-lg" data-testid="hero-subheadline">
+            In-home ABA therapy helping children build communication, independence, social skills, and confidence throughout the Greater Houston area.
+          </p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row" data-testid="hero-cta-group">
+            <Button asChild className="rounded-full bg-teal px-8 py-6 text-base font-bold text-white shadow-xl shadow-teal/20 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-teal-dark" data-testid="hero-become-client-button">
+              <Link to="/become-a-client">Become a Client <ArrowRight className="h-5 w-5" /></Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-full border-navy/15 bg-white px-8 py-6 text-base font-bold text-navy shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:bg-slate" data-testid="hero-verify-insurance-button">
+              <Link to="/insurance">Verify Insurance</Link>
+            </Button>
+          </div>
+          <div className="mt-10 grid gap-3 sm:grid-cols-3" data-testid="hero-trust-indicators">
+            {["BCBA-Led Care", "Family-Centered Approach", "Currently Accepting New Clients"].map((item) => (
+              <div key={item} className="flex items-center gap-2 rounded-2xl bg-slate px-4 py-3 text-sm font-bold text-navy" data-testid={`hero-trust-${item.toLowerCase().replaceAll(" ", "-")}`}>
+                <Check className="h-4 w-4 rounded-full bg-teal p-0.5 text-white" /> {item}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="relative z-10">
+          <div className="absolute -right-6 -top-8 hidden rounded-3xl bg-gold px-6 py-4 font-display text-2xl font-semibold text-navy shadow-xl rotate-3 md:block" data-testid="hero-floating-card">
+            We can help.
+          </div>
+          <div className="aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-slate p-2 shadow-2xl shadow-navy/15">
+            <img src={assets.hero} alt="Family receiving supportive in-home ABA therapy" className="h-full w-full rounded-[2rem] object-cover object-center" data-testid="hero-family-image" />
+          </div>
+          <div className="absolute -bottom-7 left-4 right-4 rounded-[1.5rem] border border-white/70 bg-white/90 p-5 shadow-2xl shadow-navy/15 backdrop-blur-xl md:left-10 md:right-auto md:w-80" data-testid="hero-location-card">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-teal">Serving Greater Houston</p>
+            <p className="mt-2 text-sm leading-relaxed text-navy/75">{serviceAreas.join(", ")} and nearby communities.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InsurancePreview() {
+  const plans = ["Texas Children's Health Plan", "Blue Cross Blue Shield of Texas", "Aetna"];
+  return (
+    <section className="bg-slate py-20 md:py-28" data-testid="insurance-preview-section">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <div>
+            <SectionLabel testId="insurance-preview-eyebrow">Insurance support</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="insurance-preview-title">Start Services Faster</h2>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-navy/75 md:text-lg" data-testid="insurance-preview-copy">
+              Currently accepting new clients. We can help verify insurance benefits and guide you through the authorization process.
+            </p>
+            <Button asChild className="mt-8 rounded-full bg-navy px-8 py-6 font-bold text-white hover:bg-navy/90" data-testid="insurance-preview-verify-button">
+              <Link to="/insurance">Verify Benefits</Link>
+            </Button>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {plans.map((plan, index) => (
+              <Card key={plan} className="rounded-[1.75rem] border-navy/5 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-testid={`insurance-card-${index + 1}`}>
+                <CardContent className="p-0">
+                  <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-teal/10 text-teal">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-display text-xl font-semibold text-navy" data-testid={`insurance-plan-${index + 1}-name`}>{plan}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-navy/65" data-testid={`insurance-plan-${index + 1}-text`}>Benefit checks and authorization guidance available.</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ParentConnection() {
+  return (
+    <section className="bg-white py-20 md:py-32" data-testid="parent-connection-section">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 md:grid-cols-2 md:px-8">
+        <div className="aspect-[5/4] overflow-hidden rounded-[2rem] bg-slate p-2 shadow-xl shadow-navy/10">
+          <img src={assets.parent} alt="Parent and child learning together" className="h-full w-full rounded-[1.5rem] object-cover object-center" data-testid="parent-connection-image" />
+        </div>
+        <div>
+          <SectionLabel testId="parent-connection-eyebrow">Family-centered support</SectionLabel>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="parent-connection-title">You Shouldn't Have to Navigate This Journey Alone</h2>
+          <p className="mt-6 text-base leading-relaxed text-navy/75 md:text-lg" data-testid="parent-connection-copy">
+            When your family is looking for answers, the process can feel overwhelming. Our team helps you understand ABA therapy, insurance steps, assessment needs, and what progress can look like at home.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {["Clear next steps", "Compassionate guidance", "Practical family coaching", "Meaningful progress goals"].map((item) => (
+              <div key={item} className="flex items-center gap-3 rounded-2xl bg-slate p-4 font-semibold text-navy" data-testid={`parent-connection-${item.toLowerCase().replaceAll(" ", "-")}`}>
+                <Check className="h-5 w-5 text-teal" /> {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ServicesSection({ detailed = false }) {
+  return (
+    <section className={`${detailed ? "bg-white" : "bg-slate"} py-20 md:py-32`} data-testid={detailed ? "services-detail-section" : "homepage-services-section"}>
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mb-12 max-w-3xl">
+          <SectionLabel testId={detailed ? "services-detail-eyebrow" : "services-eyebrow"}>Our services</SectionLabel>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid={detailed ? "services-detail-title" : "services-title"}>
+            ABA care designed for home, school, and everyday life.
+          </h2>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {services.map((service, index) => {
+            const Icon = service.icon;
+            return (
+              <Card key={service.title} className="group rounded-[1.75rem] border-navy/5 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-testid={`service-card-${index + 1}`}>
+                <CardContent className="p-0">
+                  <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-2xl bg-teal/10 text-teal transition-transform duration-300 group-hover:scale-105">
+                    <Icon className="h-7 w-7" />
+                  </div>
+                  <h3 className="font-display text-2xl font-semibold text-navy" data-testid={`service-card-${index + 1}-title`}>{service.title}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-summary`}>{service.summary}</p>
+                  {detailed && <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-detail`}>{service.detail}</p>}
+                  <Link to="/services" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-teal" data-testid={`service-card-${index + 1}-learn-more-link`}>
+                    Learn more <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessSection() {
+  const steps = ["Contact Us", "Verify Insurance", "Assessment", "Begin Therapy"];
+  return (
+    <section className="bg-white py-20 md:py-32" data-testid="process-section">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <SectionLabel testId="process-eyebrow">A simple path forward</SectionLabel>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="process-title">Getting Started Is Simple</h2>
+        </div>
+        <div className="grid gap-5 md:grid-cols-4">
+          {steps.map((step, index) => (
+            <div key={step} className="relative rounded-[1.75rem] bg-slate p-7" data-testid={`process-step-${index + 1}`}>
+              <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-navy font-display text-lg font-semibold text-white" data-testid={`process-step-${index + 1}-number`}>{index + 1}</div>
+              <h3 className="font-display text-xl font-semibold text-navy" data-testid={`process-step-${index + 1}-title`}>{step}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-navy/65" data-testid={`process-step-${index + 1}-copy`}>
+                {index === 0 && "Tell us about your child and what support your family needs."}
+                {index === 1 && "We help review benefits and explain authorization requirements."}
+                {index === 2 && "A BCBA completes an assessment and builds an individualized plan."}
+                {index === 3 && "Therapy begins with clear goals, parent support, and progress monitoring."}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyChooseUs() {
+  return (
+    <section className="bg-navy py-20 text-white md:py-32" data-testid="why-choose-us-section">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mb-12 max-w-3xl">
+          <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold" data-testid="why-choose-us-eyebrow">Why families choose us</p>
+          <h2 className="font-display text-3xl font-semibold tracking-tight md:text-5xl" data-testid="why-choose-us-title">Expert care that still feels personal.</h2>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {whyChooseUs.map(([Icon, title, copy], index) => (
+            <div key={title} className="rounded-[1.75rem] border border-white/10 bg-white/8 p-7 backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:bg-white/12" data-testid={`why-card-${index + 1}`}>
+              <Icon className="mb-6 h-8 w-8 text-gold" />
+              <h3 className="font-display text-xl font-semibold" data-testid={`why-card-${index + 1}-title`}>{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/70" data-testid={`why-card-${index + 1}-copy`}>{copy}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TeamSection() {
+  return (
+    <section className="bg-slate py-20 md:py-32" data-testid="team-section">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 md:grid-cols-[0.85fr_1.15fr] md:px-8">
+        <div className="overflow-hidden rounded-[2rem] bg-white p-2 shadow-xl shadow-navy/10">
+          <img src={assets.team} alt="Professional clinical director placeholder" className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center" data-testid="team-director-image" />
+        </div>
+        <div>
+          <SectionLabel testId="team-eyebrow">Leadership</SectionLabel>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="team-title">Clinical leadership families can trust.</h2>
+          <div className="mt-8 rounded-[1.75rem] bg-white p-8 shadow-sm" data-testid="team-director-card">
+            <h3 className="font-display text-2xl font-semibold text-navy" data-testid="team-director-name">Rosalyn Holmes, BCBA</h3>
+            <p className="mt-1 font-bold text-teal" data-testid="team-director-role">Clinical Director</p>
+            <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="team-director-copy">
+              Rosalyn leads Au-Some Teacher ABA Services with a commitment to compassionate, evidence-based care. Her approach blends behavioral science, educator insight, and a deep respect for every family's goals.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  return (
+    <section className="bg-white py-20 md:py-32" data-testid="testimonials-section">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mb-12 max-w-3xl">
+          <SectionLabel testId="testimonials-eyebrow">Family voices</SectionLabel>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="testimonials-title">Support that feels steady, clear, and personal.</h2>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {testimonials.map((item, index) => (
+            <Card key={item.name} className="rounded-[1.75rem] border-navy/5 bg-slate p-7 shadow-none" data-testid={`testimonial-card-${index + 1}`}>
+              <CardContent className="p-0">
+                <MessageCircleHeart className="mb-6 h-8 w-8 text-teal" />
+                <p className="text-base leading-relaxed text-navy/75" data-testid={`testimonial-card-${index + 1}-quote`}>“{item.quote}”</p>
+                <p className="mt-6 font-bold text-navy" data-testid={`testimonial-card-${index + 1}-name`}>{item.name}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  return (
+    <section className="bg-slate py-20 md:py-32" data-testid="faq-section">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 md:grid-cols-[0.75fr_1.25fr] md:px-8">
+        <div>
+          <SectionLabel testId="faq-eyebrow">Questions parents ask</SectionLabel>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="faq-title">Helpful answers before you begin.</h2>
+        </div>
+        <Accordion type="single" collapsible className="rounded-[1.75rem] bg-white p-4 shadow-sm" data-testid="faq-accordion">
+          {faqs.map((faq, index) => (
+            <AccordionItem key={faq.q} value={`faq-${index}`} className="border-navy/10 px-4" data-testid={`faq-item-${index + 1}`}>
+              <AccordionTrigger className="py-6 text-left font-display text-lg font-semibold text-navy hover:no-underline" data-testid={`faq-trigger-${index + 1}`}>
+                {faq.q}
+              </AccordionTrigger>
+              <AccordionContent className="pb-6 text-base leading-relaxed text-navy/70" data-testid={`faq-content-${index + 1}`}>
+                {faq.a}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="bg-white px-4 py-20 md:px-8 md:py-28" data-testid="final-cta-section">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-navy p-8 text-white md:p-14">
+        <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold" data-testid="final-cta-eyebrow">Ready when you are</p>
+            <h2 className="font-display text-3xl font-semibold tracking-tight md:text-5xl" data-testid="final-cta-title">Ready to Take the Next Step?</h2>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70" data-testid="final-cta-copy">Tell us a little about your family. We’ll help you understand services, insurance, and the path to beginning care.</p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button asChild className="rounded-full bg-teal px-8 py-6 font-bold text-white hover:bg-teal-dark" data-testid="final-cta-become-client-button">
+              <Link to="/become-a-client">Become a Client</Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-full border-white/20 bg-white px-8 py-6 font-bold text-navy hover:bg-slate" data-testid="final-cta-contact-button">
+              <Link to="/become-a-client">Contact Us</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LeadForm({ kind = "client", title = "Tell us how we can help", compact = false }) {
+  const [submitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    child_age: "",
+    insurance: "",
+    city: "",
+    message: "",
+  });
+
+  const update = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
+
+  const submit = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      await axios.post(`${API}/leads`, { ...form, kind });
+      toast.success("Thank you — your message was received.", {
+        description: "Our team will follow up with next steps soon.",
+      });
+      setForm({ name: "", email: "", phone: "", child_age: "", insurance: "", city: "", message: "" });
+    } catch (error) {
+      toast.error("We couldn't send the form yet.", {
+        description: "Please check the required fields and try again.",
+      });
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
   return (
-    <div>
-      <header className="App-header">
-        <a
-          data-testid={HOME.emergentLink}
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
+    <form onSubmit={submit} className="rounded-[2rem] bg-white p-6 shadow-xl shadow-navy/10 md:p-8" data-testid={`${kind}-lead-form`}>
+      <h2 className="font-display text-2xl font-semibold text-navy" data-testid={`${kind}-lead-form-title`}>{title}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-navy/65" data-testid={`${kind}-lead-form-copy`}>Share a few details and we’ll help you find the right next step.</p>
+      <div className="mt-7 grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor={`${kind}-name`} className="text-navy" data-testid={`${kind}-name-label`}>Name</Label>
+          <Input id={`${kind}-name`} name="name" value={form.name} onChange={update} required className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-name-input`} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${kind}-email`} className="text-navy" data-testid={`${kind}-email-label`}>Email</Label>
+          <Input id={`${kind}-email`} name="email" type="email" value={form.email} onChange={update} required className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-email-input`} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${kind}-phone`} className="text-navy" data-testid={`${kind}-phone-label`}>Phone</Label>
+          <Input id={`${kind}-phone`} name="phone" value={form.phone} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-phone-input`} />
+        </div>
+        {!compact && (
+          <div className="space-y-2">
+            <Label htmlFor={`${kind}-child-age`} className="text-navy" data-testid={`${kind}-child-age-label`}>Child's age</Label>
+            <Input id={`${kind}-child-age`} name="child_age" value={form.child_age} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-child-age-input`} />
+          </div>
+        )}
+        <div className="space-y-2">
+          <Label htmlFor={`${kind}-insurance`} className="text-navy" data-testid={`${kind}-insurance-label`}>Insurance</Label>
+          <Input id={`${kind}-insurance`} name="insurance" value={form.insurance} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-insurance-input`} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${kind}-city`} className="text-navy" data-testid={`${kind}-city-label`}>City</Label>
+          <Input id={`${kind}-city`} name="city" value={form.city} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-city-input`} />
+        </div>
+      </div>
+      <div className="mt-5 space-y-2">
+        <Label htmlFor={`${kind}-message`} className="text-navy" data-testid={`${kind}-message-label`}>How can we help?</Label>
+        <Textarea id={`${kind}-message`} name="message" value={form.message} onChange={update} className="min-h-32 rounded-2xl border-navy/10 bg-slate px-4 py-3" data-testid={`${kind}-message-textarea`} />
+      </div>
+      <Button type="submit" disabled={submitting} className="mt-6 w-full rounded-full bg-teal py-6 font-bold text-white hover:bg-teal-dark" data-testid={`${kind}-submit-button`}>
+        {submitting ? "Sending..." : "Submit Request"}
+      </Button>
+    </form>
   );
-};
+}
+
+function HomePage() {
+  return (
+    <main data-testid="homepage-main">
+      <Hero />
+      <InsurancePreview />
+      <ParentConnection />
+      <ServicesSection />
+      <ProcessSection />
+      <WhyChooseUs />
+      <TeamSection />
+      <Testimonials />
+      <FAQSection />
+      <FinalCTA />
+    </main>
+  );
+}
+
+function ServicesPage() {
+  return (
+    <main data-testid="services-page-main">
+      <PageHero
+        eyebrow="Services"
+        title="Therapy, training, and collaboration built around your child."
+        text="Explore the core services Au-Some Teacher ABA Services provides for families, schools, and children across Greater Houston."
+        image={assets.services}
+        testId="services-page-hero"
+      />
+      <ServicesSection detailed />
+      <ProcessSection />
+      <FinalCTA />
+    </main>
+  );
+}
+
+function InsurancePage() {
+  return (
+    <main data-testid="insurance-page-main">
+      <PageHero
+        eyebrow="Insurance"
+        title="We help families understand benefits before services begin."
+        text="Insurance can feel confusing. Our team helps verify benefits, explain authorization steps, and guide families through the process with clarity."
+        image={assets.parent}
+        testId="insurance-page-hero"
+      />
+      <section className="bg-white py-20 md:py-32" data-testid="insurance-detail-section">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 md:grid-cols-[0.8fr_1.2fr] md:px-8">
+          <div>
+            <SectionLabel testId="insurance-detail-eyebrow">Accepted plans</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="insurance-detail-title">Start with a benefit check.</h2>
+            <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="insurance-detail-copy">We currently list Texas Children's Health Plan, Blue Cross Blue Shield of Texas, and Aetna. Plan coverage varies, so verification is the best first step.</p>
+          </div>
+          <LeadForm kind="insurance" title="Verify your benefits" compact />
+        </div>
+      </section>
+      <FAQSection />
+    </main>
+  );
+}
+
+function AboutPage() {
+  return (
+    <main data-testid="about-page-main">
+      <PageHero
+        eyebrow="About Au-Some Teacher"
+        title="Education-informed ABA care with heart, clarity, and purpose."
+        text="Our mission is to help children build meaningful skills while supporting the families, teachers, and communities around them."
+        image={assets.about}
+        testId="about-page-hero"
+      />
+      <section className="bg-white py-20 md:py-32" data-testid="about-values-section">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              ["Mission", "To provide evidence-based ABA therapy that helps children communicate, connect, learn, and become more independent."],
+              ["Vision", "A Greater Houston community where children with autism and their families feel supported, included, and confident."],
+              ["Values", "Family partnership, clinical excellence, inclusion, dignity, meaningful progress, and education-informed care."],
+            ].map(([title, copy], index) => (
+              <Card key={title} className="rounded-[1.75rem] border-navy/5 bg-slate p-8 shadow-none" data-testid={`about-value-card-${index + 1}`}>
+                <CardContent className="p-0">
+                  <h2 className="font-display text-2xl font-semibold text-navy" data-testid={`about-value-card-${index + 1}-title`}>{title}</h2>
+                  <p className="mt-4 text-base leading-relaxed text-navy/70" data-testid={`about-value-card-${index + 1}-copy`}>{copy}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+      <TeamSection />
+      <FAQSection />
+    </main>
+  );
+}
+
+function CareersPage() {
+  return (
+    <main data-testid="careers-page-main">
+      <PageHero
+        eyebrow="Careers"
+        title="Join a team helping children build skills that matter."
+        text="Au-Some Teacher ABA Services welcomes compassionate RBT candidates who value family partnership, professionalism, and meaningful progress."
+        image={assets.careers}
+        testId="careers-page-hero"
+      />
+      <section className="bg-white py-20 md:py-32" data-testid="careers-detail-section">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 md:grid-cols-[0.95fr_1.05fr] md:px-8">
+          <div>
+            <SectionLabel testId="careers-detail-eyebrow">RBT opportunities</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="careers-detail-title">Warm, professional, growth-minded care providers wanted.</h2>
+            <div className="mt-8 grid gap-4">
+              {["BCBA guidance and clinical support", "In-home therapy with families across Greater Houston", "Purposeful work focused on real-life skills", "A team culture built on respect and communication"].map((item) => (
+                <div key={item} className="flex items-center gap-3 rounded-2xl bg-slate p-4 font-semibold text-navy" data-testid={`careers-benefit-${item.toLowerCase().replaceAll(" ", "-")}`}>
+                  <BriefcaseBusiness className="h-5 w-5 text-teal" /> {item}
+                </div>
+              ))}
+            </div>
+          </div>
+          <LeadForm kind="career" title="Start a career conversation" compact />
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function BecomeClientPage() {
+  return (
+    <main data-testid="become-client-page-main">
+      <PageHero
+        eyebrow="Become a Client"
+        title="Take the first step toward support at home."
+        text="Share your family's needs and we’ll help you understand availability, insurance, assessment, and what beginning services can look like."
+        image={assets.hero}
+        cta={false}
+        testId="become-client-page-hero"
+      />
+      <section className="bg-slate py-20 md:py-32" data-testid="become-client-form-section">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 md:grid-cols-[0.8fr_1.2fr] md:px-8">
+          <div>
+            <SectionLabel testId="become-client-detail-eyebrow">Getting started</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="become-client-detail-title">A simple intake designed for busy families.</h2>
+            <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="become-client-detail-copy">You do not need to have every answer before reaching out. Tell us what you know, and we’ll help guide the next step.</p>
+            <div className="mt-8 rounded-[1.75rem] bg-white p-6 shadow-sm" data-testid="contact-info-card">
+              <PhoneCall className="mb-4 h-7 w-7 text-teal" />
+              <p className="font-bold text-navy" data-testid="contact-info-email">info@ausometeacher.com</p>
+              <p className="mt-2 text-sm text-navy/65" data-testid="contact-info-service-area">Serving families throughout the Greater Houston area.</p>
+            </div>
+          </div>
+          <LeadForm kind="client" title="Become a client" />
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-navy py-16 text-white md:py-20" data-testid="site-footer">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 md:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] md:px-8">
+        <div>
+          <Logo footer />
+          <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/70" data-testid="footer-description">In-home ABA therapy helping children build communication, independence, social skills, and confidence.</p>
+          <p className="mt-5 font-semibold text-gold" data-testid="footer-slogan">Teaching Skills. Building Confidence. Changing Futures.</p>
+        </div>
+        <div>
+          <h3 className="font-display text-lg font-semibold" data-testid="footer-services-heading">Services</h3>
+          <div className="mt-4 flex flex-col gap-3">
+            {services.map((service) => (
+              <Link key={service.title} to="/services" className="text-sm text-white/70 hover:text-white" data-testid={`footer-service-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}>{service.title}</Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h3 className="font-display text-lg font-semibold" data-testid="footer-company-heading">Company</h3>
+          <div className="mt-4 flex flex-col gap-3">
+            {navItems.map((item) => (
+              <Link key={item.path} to={item.path} className="text-sm text-white/70 hover:text-white" data-testid={`footer-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}>{item.label}</Link>
+            ))}
+            <Link to="/become-a-client" className="text-sm text-white/70 hover:text-white" data-testid="footer-become-client-link">Become a Client</Link>
+          </div>
+        </div>
+        <div>
+          <h3 className="font-display text-lg font-semibold" data-testid="footer-contact-heading">Contact</h3>
+          <p className="mt-4 text-sm text-white/70" data-testid="footer-email">info@ausometeacher.com</p>
+          <p className="mt-3 text-sm leading-relaxed text-white/70" data-testid="footer-areas">{serviceAreas.join(", ")}</p>
+          <Button asChild className="mt-6 rounded-full bg-teal px-6 py-5 font-bold text-white hover:bg-teal-dark" data-testid="footer-contact-button">
+            <Link to="/become-a-client">Contact Us</Link>
+          </Button>
+        </div>
+      </div>
+      <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 px-4 pt-6 text-xs text-white/50 md:px-8" data-testid="footer-copyright">
+        © {new Date().getFullYear()} Au-Some Teacher ABA Services. All rights reserved.
+      </div>
+    </footer>
+  );
+}
+
+function AppShell() {
+  return (
+    <>
+      <ScrollToTop />
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/insurance" element={<InsurancePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/careers" element={<CareersPage />} />
+        <Route path="/become-a-client" element={<BecomeClientPage />} />
+      </Routes>
+      <Footer />
+      <Toaster richColors position="top-right" />
+    </>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <AppShell />
+    </BrowserRouter>
   );
 }
 

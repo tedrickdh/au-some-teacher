@@ -13,6 +13,11 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
+        navy: '#163A5F',
+        teal: '#2CB1BC',
+        'teal-dark': '#22929B',
+        gold: '#F4B942',
+        slate: '#F7F9FC',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -53,6 +58,10 @@ module.exports = {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
         }
+      },
+      fontFamily: {
+        display: ['Outfit', 'sans-serif'],
+        sans: ['DM Sans', 'sans-serif']
       },
       keyframes: {
         'accordion-down': {
