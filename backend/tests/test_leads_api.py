@@ -55,6 +55,8 @@ def test_create_client_lead_success(api_client: requests.Session) -> None:
     assert data["email"] == payload["email"]
     assert data["insurance"] == payload["insurance"]
     assert data["city"] == payload["city"]
+    assert data["destination_email"] == "info@ausometeacher.com"
+    assert isinstance(data["notification_sent"], bool)
 
     # created_at should be an ISO datetime
     parsed = datetime.fromisoformat(data["created_at"].replace("Z", "+00:00"))
@@ -73,6 +75,7 @@ def test_create_insurance_lead_success(api_client: requests.Session) -> None:
     assert data["kind"] == "insurance"
     assert data["name"] == payload["name"]
     assert data["email"] == payload["email"]
+    assert data["destination_email"] == "info@ausometeacher.com"
 
 
 def test_create_lead_invalid_email_rejected(api_client: requests.Session) -> None:

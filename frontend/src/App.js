@@ -46,6 +46,10 @@ import {
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+const contact = {
+  email: "info@ausometeacher.com",
+  emailHref: "mailto:info@ausometeacher.com",
+};
 
 const assets = {
   logo: "https://customer-assets.emergentagent.com/job_9999b4e2-e562-4f7d-b65c-b27bad5fffb6/artifacts/7m2ruj3w_brain-with-pencil1.png",
@@ -879,7 +883,7 @@ function BecomeClientPage() {
             <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="become-client-detail-copy">You do not need to have every answer before reaching out. Tell us what you know, and we’ll help guide the next step.</p>
             <div className="mt-8 rounded-[1.75rem] bg-white p-6 shadow-sm" data-testid="contact-info-card">
               <PhoneCall className="mb-4 h-7 w-7 text-teal" />
-              <p className="font-bold text-navy" data-testid="contact-info-email">info@ausometeacher.com</p>
+              <a href={contact.emailHref} className="font-bold text-navy underline decoration-teal/40 underline-offset-4" data-testid="contact-info-email-link">{contact.email}</a>
               <p className="mt-2 text-sm text-navy/65" data-testid="contact-info-service-area">Serving families throughout the Greater Houston area.</p>
             </div>
           </div>
@@ -918,7 +922,7 @@ function Footer() {
         </div>
         <div>
           <h3 className="font-display text-lg font-semibold" data-testid="footer-contact-heading">Contact</h3>
-          <p className="mt-4 text-sm text-white/70" data-testid="footer-email">info@ausometeacher.com</p>
+          <a href={contact.emailHref} className="mt-4 block text-sm text-white/70 hover:text-white" data-testid="footer-email-link">{contact.email}</a>
           <p className="mt-3 text-sm leading-relaxed text-white/70" data-testid="footer-areas">{serviceAreas.join(", ")}</p>
           <Button asChild className="mt-6 rounded-full bg-teal px-6 py-5 font-bold text-white hover:bg-teal-dark" data-testid="footer-contact-button">
             <Link to="/become-a-client">Contact Us</Link>

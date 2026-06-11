@@ -4,11 +4,13 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import smtplib
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
+from email.message import EmailMessage
 
 
 ROOT_DIR = Path(__file__).parent
@@ -60,6 +62,52 @@ class LeadResponse(BaseModel):
     city: Optional[str] = None
     message: Optional[str] = None
     created_at: str
+    destination_email: EmailStr
+    notification_sent: bool
+
+def get_contact_email() -> str:
+    return os.environ['CONTACT_EMAIL']
+
+def email_notifications_configured() -> bool:
+    required_keys = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USERNAME', 'SMTP_PASSWORD', 'CONTACT_EMAIL']
+    return all(os.environ.get(key) for key in required_keys)
+
+def build_lead_email(lead_doc: dict[str, object]) -> EmailMessage:
+    destination = get_contact_email()
+    kind = str(lead_doc.get('kind', 'lead')).title()
+    subject = f"New Au-Some Teacher {kind} Form Submission"
+    lines = [
+        f"Form type: {lead_doc.get('kind', '')}",
+        f"Name: {lead_doc.get('name', '')}",
+        f"Email: {lead_doc.get('email', '')}",
+        f"Phone: {lead_doc.get('phone', '')}",
+        f"Child age: {lead_doc.get('child_age', '')}",
+        f"Insurance: {lead_doc.get('insurance', '')}",
+        f"City: {lead_doc.get('city', '')}",
+        f"Message: {lead_doc.get('message', '')}",
+        f"Submitted at: {lead_doc.get('created_at', '')}",
+    ]
+    message = EmailMessage()
+    message['Subject'] = subject
+    message['From'] = os.environ.get('SMTP_FROM_EMAIL', destination)
+    message['To'] = destination
+    message['Reply-To'] = str(lead_doc.get('email', destination))
+    message.set_content('\n'.join(lines))
+    return message
+
+def send_lead_notification(lead_doc: dict[str, object]) -> bool:
+    if not email_notifications_configured():
+        logger.warning('Lead email notification skipped because SMTP settings are not configured')
+        return False
+
+    message = build_lead_email(lead_doc)
+    smtp_host = os.environ['SMTP_HOST']
+    smtp_port = int(os.environ['SMTP_PORT'])
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=15) as smtp:
+        smtp.starttls()
+        smtp.login(os.environ['SMTP_USERNAME'], os.environ['SMTP_PASSWORD'])
+        smtp.send_message(message)
+    return True
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
@@ -95,8 +143,27 @@ async def create_lead(input: LeadCreate) -> dict[str, object]:
     lead_doc = input.model_dump()
     lead_doc["id"] = str(uuid.uuid4())
     lead_doc["created_at"] = datetime.now(timezone.utc).isoformat()
+    lead_doc["destination_email"] = get_contact_email()
+    lead_doc["notification_sent"] = False
     await db.leads.insert_one(lead_doc.copy())
+    try:
+        notification_sent = send_lead_notification(lead_doc)
+        lead_doc["notification_sent"] = notification_sent
+        await db.leads.update_one(
+            {"id": lead_doc["id"]},
+            {"$set": {"notification_sent": notification_sent}}
+        )
+    except Exception:
+        logger.exception('Lead saved, but email notification failed')
     return lead_doc
+
+@api_router.get("/contact-routing")
+async def get_contact_routing() -> dict[str, object]:
+    return {
+        "contact_email": get_contact_email(),
+        "forms_save_to_database": True,
+        "email_notifications_configured": email_notifications_configured(),
+    }
 
 # Include the router in the main app
 app.include_router(api_router)

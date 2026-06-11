@@ -48,3 +48,11 @@ Redesign https://www.au-someteacher.com/ into a premium, modern, mobile-first we
 - Refactored long Header and LeadForm responsibilities into smaller navigation, menu, field, and form-hook helpers.
 - Added Python type hints to backend route handlers and lead API regression tests.
 - Re-verified with frontend lint, backend lint, production build, pytest lead API regression tests, and browser smoke test.
+
+
+## Contact Routing Update
+- Public contact email is set to info@ausometeacher.com and displayed as clickable mailto links in the intake card and footer.
+- All lead forms save submissions to MongoDB with destination_email=info@ausometeacher.com.
+- Backend has SMTP email notification support ready, but notification_sent remains false until SMTP credentials are provided in backend/.env.
+- Added /api/contact-routing to verify current contact destination and email-notification configuration.
+- Verified with API tests and browser form submission.
