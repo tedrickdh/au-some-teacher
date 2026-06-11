@@ -77,7 +77,7 @@ def email_notifications_configured() -> bool:
 
 def lead_value(lead_doc: dict[str, object], key: str) -> str:
     value = lead_doc.get(key)
-    return "" if value is None else str(value)
+    return "" if value in (None,) else str(value)
 
 def build_lead_email_html(lead_doc: dict[str, object]) -> str:
     fields = [

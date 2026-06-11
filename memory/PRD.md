@@ -64,3 +64,12 @@ Redesign https://www.au-someteacher.com/ into a premium, modern, mobile-first we
 - Forms save to MongoDB before attempting email, so submissions are preserved even if Resend fails.
 - Lead responses/records now include notification_sent, notification_error, email_provider_id, and destination_email.
 - Live test confirmed Resend is currently blocked because ausometeacher.com is not verified in Resend. Complete domain verification in Resend to enable inbox delivery.
+
+
+## Code Review Cleanup Update
+- Added the requested toast subscription dependency.
+- Removed identity comparison pattern in backend lead value handling.
+- Refactored lead API tests with helper assertions to reduce test complexity.
+- Removed production console warning from craco config.
+- Extracted query stale time constant and consolidated App.js icon imports.
+- Verified with frontend lint, backend lint, production build, and lead API regression tests.

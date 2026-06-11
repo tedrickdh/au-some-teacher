@@ -22,27 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster, toast } from "@/components/ui/sonner";
-import {
-  ArrowRight,
-  BadgeCheck,
-  BookOpenCheck,
-  Brain,
-  BriefcaseBusiness,
-  CalendarCheck,
-  Check,
-  ChevronDown,
-  ClipboardCheck,
-  GraduationCap,
-  HandHeart,
-  HeartHandshake,
-  Home as HomeIcon,
-  Menu,
-  MessageCircleHeart,
-  PhoneCall,
-  School,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import * as Icons from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -82,7 +62,7 @@ const navItems = [
 const services = [
   {
     title: "ABA Therapy",
-    icon: Brain,
+    icon: Icons.Brain,
     summary:
       "Individualized in-home therapy focused on communication, behavior, independence, social skills, and daily routines.",
     detail:
@@ -90,7 +70,7 @@ const services = [
   },
   {
     title: "Parent Training",
-    icon: HandHeart,
+    icon: Icons.HandHeart,
     summary:
       "Practical coaching that helps caregivers feel confident supporting progress between therapy sessions.",
     detail:
@@ -98,7 +78,7 @@ const services = [
   },
   {
     title: "Assessments",
-    icon: ClipboardCheck,
+    icon: Icons.ClipboardCheck,
     summary:
       "Thoughtful skill and behavior assessments that guide goals, treatment planning, and insurance authorization.",
     detail:
@@ -106,7 +86,7 @@ const services = [
   },
   {
     title: "School Collaboration",
-    icon: School,
+    icon: Icons.School,
     summary:
       "Coordination with educators and school teams to support consistency across learning environments.",
     detail:
@@ -115,12 +95,12 @@ const services = [
 ];
 
 const whyChooseUs = [
-  [BadgeCheck, "BCBA-Led Treatment", "Clinical oversight from experienced behavior analysts."],
-  [BookOpenCheck, "Individualized Programs", "Goals are built around each child and family."],
-  [HeartHandshake, "Family Partnership", "Parents are included, respected, and supported."],
-  [HomeIcon, "Real-Life Skill Development", "Therapy happens where children live and learn."],
-  [CalendarCheck, "Flexible Service Delivery", "In-home care shaped around family routines."],
-  [GraduationCap, "Education-Informed Care", "Teaching expertise meets evidence-based ABA."],
+  [Icons.BadgeCheck, "BCBA-Led Treatment", "Clinical oversight from experienced behavior analysts."],
+  [Icons.BookOpenCheck, "Individualized Programs", "Goals are built around each child and family."],
+  [Icons.HeartHandshake, "Family Partnership", "Parents are included, respected, and supported."],
+  [Icons.Home, "Real-Life Skill Development", "Therapy happens where children live and learn."],
+  [Icons.CalendarCheck, "Flexible Service Delivery", "In-home care shaped around family routines."],
+  [Icons.GraduationCap, "Education-Informed Care", "Teaching expertise meets evidence-based ABA."],
 ];
 
 const faqs = [
@@ -236,7 +216,7 @@ function ServicesDropdown() {
         data-testid="desktop-services-dropdown-button"
         aria-label="Open service submenu"
       >
-        Service Details <ChevronDown className="h-4 w-4" />
+        Service Details <Icons.ChevronDown className="h-4 w-4" />
       </button>
       <div className="invisible absolute left-0 top-full w-72 translate-y-2 rounded-3xl border border-navy/10 bg-white p-3 opacity-0 shadow-2xl shadow-navy/10 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
         {services.map((service) => (
@@ -287,7 +267,7 @@ function MobileMenu({ open, setOpen }) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full border-navy/10 lg:hidden" data-testid="mobile-menu-open-button" aria-label="Open menu">
-          <Menu className="h-5 w-5 text-navy" />
+          <Icons.Menu className="h-5 w-5 text-navy" />
         </Button>
       </SheetTrigger>
       <SheetContent className="w-[88vw] border-l-0 bg-white p-6" data-testid="mobile-menu-panel">
@@ -368,7 +348,7 @@ function Hero() {
       <div className="mx-auto grid min-h-[760px] max-w-7xl items-center gap-12 px-4 py-16 md:grid-cols-[1.03fr_0.97fr] md:px-8 md:py-24">
         <div className="relative z-10">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/10 px-4 py-2 text-sm font-bold text-navy" data-testid="hero-accepting-clients-badge">
-            <Sparkles className="h-4 w-4 text-teal" /> Currently Accepting New Clients
+            <Icons.Sparkles className="h-4 w-4 text-teal" /> Currently Accepting New Clients
           </div>
           <h1 className="max-w-4xl font-display text-5xl font-semibold leading-[0.96] tracking-tight text-navy sm:text-6xl lg:text-7xl" data-testid="hero-headline">
             Teaching Skills. Building Confidence. Changing Futures.
@@ -378,7 +358,7 @@ function Hero() {
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row" data-testid="hero-cta-group">
             <Button asChild className="rounded-full bg-teal px-8 py-6 text-base font-bold text-white shadow-xl shadow-teal/20 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-teal-dark" data-testid="hero-become-client-button">
-              <Link to="/become-a-client">Become a Client <ArrowRight className="h-5 w-5" /></Link>
+              <Link to="/become-a-client">Become a Client <Icons.ArrowRight className="h-5 w-5" /></Link>
             </Button>
             <Button asChild variant="outline" className="rounded-full border-navy/15 bg-white px-8 py-6 text-base font-bold text-navy shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:bg-slate" data-testid="hero-verify-insurance-button">
               <Link to="/insurance">Verify Insurance</Link>
@@ -387,7 +367,7 @@ function Hero() {
           <div className="mt-10 grid gap-3 sm:grid-cols-3" data-testid="hero-trust-indicators">
             {["BCBA-Led Care", "Family-Centered Approach", "Currently Accepting New Clients"].map((item) => (
               <div key={item} className="flex items-center gap-2 rounded-2xl bg-slate px-4 py-3 text-sm font-bold text-navy" data-testid={`hero-trust-${item.toLowerCase().replaceAll(" ", "-")}`}>
-                <Check className="h-4 w-4 rounded-full bg-teal p-0.5 text-white" /> {item}
+                <Icons.Check className="h-4 w-4 rounded-full bg-teal p-0.5 text-white" /> {item}
               </div>
             ))}
           </div>
@@ -430,7 +410,7 @@ function InsurancePreview() {
               <Card key={plan} className="rounded-[1.75rem] border-navy/5 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-testid={`insurance-card-${index + 1}`}>
                 <CardContent className="p-0">
                   <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-teal/10 text-teal">
-                    <ShieldCheck className="h-6 w-6" />
+                    <Icons.ShieldCheck className="h-6 w-6" />
                   </div>
                   <h3 className="font-display text-xl font-semibold text-navy" data-testid={`insurance-plan-${index + 1}-name`}>{plan}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-navy/65" data-testid={`insurance-plan-${index + 1}-text`}>Benefit checks and authorization guidance available.</p>
@@ -460,7 +440,7 @@ function ParentConnection() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {["Clear next steps", "Compassionate guidance", "Practical family coaching", "Meaningful progress goals"].map((item) => (
               <div key={item} className="flex items-center gap-3 rounded-2xl bg-slate p-4 font-semibold text-navy" data-testid={`parent-connection-${item.toLowerCase().replaceAll(" ", "-")}`}>
-                <Check className="h-5 w-5 text-teal" /> {item}
+                <Icons.Check className="h-5 w-5 text-teal" /> {item}
               </div>
             ))}
           </div>
@@ -493,7 +473,7 @@ function ServicesSection({ detailed = false }) {
                   <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-summary`}>{service.summary}</p>
                   {detailed && <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-detail`}>{service.detail}</p>}
                   <Link to="/services" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-teal" data-testid={`service-card-${index + 1}-learn-more-link`}>
-                    Learn more <ArrowRight className="h-4 w-4" />
+                    Learn more <Icons.ArrowRight className="h-4 w-4" />
                   </Link>
                 </CardContent>
               </Card>
@@ -590,7 +570,7 @@ function Testimonials() {
           {testimonials.map((item, index) => (
             <Card key={item.name} className="rounded-[1.75rem] border-navy/5 bg-slate p-7 shadow-none" data-testid={`testimonial-card-${index + 1}`}>
               <CardContent className="p-0">
-                <MessageCircleHeart className="mb-6 h-8 w-8 text-teal" />
+                <Icons.MessageCircleHeart className="mb-6 h-8 w-8 text-teal" />
                 <p className="text-base leading-relaxed text-navy/75" data-testid={`testimonial-card-${index + 1}-quote`}>“{item.quote}”</p>
                 <p className="mt-6 font-bold text-navy" data-testid={`testimonial-card-${index + 1}-name`}>{item.name}</p>
               </CardContent>
@@ -852,7 +832,7 @@ function CareersPage() {
             <div className="mt-8 grid gap-4">
               {["BCBA guidance and clinical support", "In-home therapy with families across Greater Houston", "Purposeful work focused on real-life skills", "A team culture built on respect and communication"].map((item) => (
                 <div key={item} className="flex items-center gap-3 rounded-2xl bg-slate p-4 font-semibold text-navy" data-testid={`careers-benefit-${item.toLowerCase().replaceAll(" ", "-")}`}>
-                  <BriefcaseBusiness className="h-5 w-5 text-teal" /> {item}
+                  <Icons.BriefcaseBusiness className="h-5 w-5 text-teal" /> {item}
                 </div>
               ))}
             </div>
@@ -882,7 +862,7 @@ function BecomeClientPage() {
             <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="become-client-detail-title">A simple intake designed for busy families.</h2>
             <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="become-client-detail-copy">You do not need to have every answer before reaching out. Tell us what you know, and we’ll help guide the next step.</p>
             <div className="mt-8 rounded-[1.75rem] bg-white p-6 shadow-sm" data-testid="contact-info-card">
-              <PhoneCall className="mb-4 h-7 w-7 text-teal" />
+              <Icons.PhoneCall className="mb-4 h-7 w-7 text-teal" />
               <a href={contact.emailHref} className="font-bold text-navy underline decoration-teal/40 underline-offset-4" data-testid="contact-info-email-link">{contact.email}</a>
               <p className="mt-2 text-sm text-navy/65" data-testid="contact-info-service-area">Serving families throughout the Greater Houston area.</p>
             </div>

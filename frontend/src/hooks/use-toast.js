@@ -164,7 +164,7 @@ function useToast() {
 
   React.useEffect(() => {
     return subscribeToastListener(setState);
-  }, [setState])
+  }, [setState, subscribeToastListener])
 
   return {
     ...state,
