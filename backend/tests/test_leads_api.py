@@ -53,7 +53,7 @@ def _assert_lead_identity(data: dict[str, Any], payload: dict[str, str]) -> None
     assert data["email"] == payload["email"]
 
 def _assert_lead_routing(data: dict[str, Any]) -> None:
-    assert data["destination_email"] == "info@ausometeacher.com"
+    assert data["destination_email"] == "info@au-someteacher.com"
     assert isinstance(data["notification_sent"], bool)
     assert "notification_error" in data
     assert "email_provider_id" in data

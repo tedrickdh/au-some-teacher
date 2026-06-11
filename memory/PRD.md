@@ -73,3 +73,11 @@ Redesign https://www.au-someteacher.com/ into a premium, modern, mobile-first we
 - Removed production console warning from craco config.
 - Extracted query stale time constant and consolidated App.js icon imports.
 - Verified with frontend lint, backend lint, production build, and lead API regression tests.
+
+
+## Standardized Email Domain Update
+- FROM standardized to Au-Some Teacher <forms@au-someteacher.com>.
+- TO standardized to info@au-someteacher.com.
+- RESEND_API_KEY is configured in backend environment; contact-routing endpoint reports this without exposing the key.
+- Code saves lead submissions to MongoDB first, then calls resend.Emails.send through the Resend SDK.
+- Live verification confirmed current Resend blocker: au-someteacher.com is not yet verified in Resend.

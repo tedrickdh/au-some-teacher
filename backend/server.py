@@ -193,8 +193,10 @@ async def get_contact_routing() -> dict[str, object]:
     return {
         "contact_email": get_contact_email(),
         "sender_email": os.environ.get('SENDER_EMAIL'),
+        "resend_api_key_configured": bool(os.environ.get('RESEND_API_KEY')),
         "forms_save_to_database": True,
         "email_notifications_configured": email_notifications_configured(),
+        "email_send_after_database_save": True,
     }
 
 # Include the router in the main app

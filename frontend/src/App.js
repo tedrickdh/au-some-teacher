@@ -27,8 +27,8 @@ import * as Icons from "lucide-react";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const contact = {
-  email: "info@ausometeacher.com",
-  emailHref: "mailto:info@ausometeacher.com",
+  email: "info@au-someteacher.com",
+  emailHref: "mailto:info@au-someteacher.com",
 };
 
 const assets = {
