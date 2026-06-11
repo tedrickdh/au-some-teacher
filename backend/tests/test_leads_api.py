@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 import requests
 from dotenv import load_dotenv
+from typing import Any
 
 
 # Load public app URL from frontend env (required for external endpoint testing)
@@ -16,7 +17,7 @@ BASE_URL = os.environ.get("REACT_APP_BACKEND_URL")
 
 
 @pytest.fixture(scope="module")
-def api_client():
+def api_client() -> requests.Session:
     """Shared HTTP session for lead API tests."""
     if not BASE_URL:
         pytest.skip("REACT_APP_BACKEND_URL missing; cannot run public endpoint tests")
@@ -26,7 +27,7 @@ def api_client():
     return session
 
 
-def _valid_payload(kind: str = "client"):
+def _valid_payload(kind: str = "client") -> dict[str, str]:
     unique = uuid.uuid4().hex[:8]
     return {
         "kind": kind,
@@ -40,14 +41,14 @@ def _valid_payload(kind: str = "client"):
     }
 
 
-def test_create_client_lead_success(api_client):
+def test_create_client_lead_success(api_client: requests.Session) -> None:
     """Lead create: valid client payload should persist and return structured data."""
     payload = _valid_payload("client")
     response = api_client.post(f"{BASE_URL}/api/leads", json=payload, timeout=20)
 
     assert response.status_code == 200
 
-    data = response.json()
+    data: dict[str, Any] = response.json()
     assert isinstance(data.get("id"), str) and len(data["id"]) > 10
     assert data["kind"] == payload["kind"]
     assert data["name"] == payload["name"]
@@ -60,7 +61,7 @@ def test_create_client_lead_success(api_client):
     assert isinstance(parsed, datetime)
 
 
-def test_create_insurance_lead_success(api_client):
+def test_create_insurance_lead_success(api_client: requests.Session) -> None:
     """Lead create: valid insurance verification payload should succeed."""
     payload = _valid_payload("insurance")
     payload["message"] = "Please verify benefits."
@@ -68,13 +69,13 @@ def test_create_insurance_lead_success(api_client):
     response = api_client.post(f"{BASE_URL}/api/leads", json=payload, timeout=20)
     assert response.status_code == 200
 
-    data = response.json()
+    data: dict[str, Any] = response.json()
     assert data["kind"] == "insurance"
     assert data["name"] == payload["name"]
     assert data["email"] == payload["email"]
 
 
-def test_create_lead_invalid_email_rejected(api_client):
+def test_create_lead_invalid_email_rejected(api_client: requests.Session) -> None:
     """Lead create: invalid email should return validation error."""
     payload = _valid_payload("client")
     payload["email"] = "not-an-email"
@@ -82,6 +83,6 @@ def test_create_lead_invalid_email_rejected(api_client):
     response = api_client.post(f"{BASE_URL}/api/leads", json=payload, timeout=20)
     assert response.status_code == 422
 
-    data = response.json()
+    data: dict[str, Any] = response.json()
     assert "detail" in data
     assert isinstance(data["detail"], list)

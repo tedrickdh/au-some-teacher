@@ -41,3 +41,10 @@ Redesign https://www.au-someteacher.com/ into a premium, modern, mobile-first we
 - Add social proof expansion: insurance badges, provider referral section, downloadable intake checklist.
 - Add careers application fields/resume upload if recruiting workflow requires it.
 - Add analytics conversion tracking for form submissions and CTA clicks.
+
+
+## Code Review Fixes Applied
+- Fixed toast hook subscription effect dependencies by extracting listener subscription cleanup.
+- Refactored long Header and LeadForm responsibilities into smaller navigation, menu, field, and form-hook helpers.
+- Added Python type hints to backend route handlers and lead API regression tests.
+- Re-verified with frontend lint, backend lint, production build, pytest lead API regression tests, and browser smoke test.

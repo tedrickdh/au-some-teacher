@@ -37,56 +37,73 @@ const addToRemoveQueue = (toastId) => {
   toastTimeouts.set(toastId, timeout)
 }
 
-export const reducer = (state, action) => {
+function addToast(state, action) {
+  return {
+    ...state,
+    toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+  };
+}
+
+function updateToast(state, action) {
+  return {
+    ...state,
+    toasts: state.toasts.map((t) =>
+      t.id === action.toast.id ? { ...t, ...action.toast } : t),
+  };
+}
+
+function dismissToast(state, action) {
+  const { toastId } = action
+
+  if (toastId) {
+    addToRemoveQueue(toastId)
+  } else {
+    state.toasts.forEach((toast) => {
+      addToRemoveQueue(toast.id)
+    })
+  }
+
+  return {
+    ...state,
+    toasts: state.toasts.map((t) =>
+      t.id === toastId || toastId === undefined
+        ? {
+            ...t,
+            open: false,
+          }
+        : t),
+  };
+}
+
+function removeToast(state, action) {
+  if (action.toastId === undefined) {
+    return {
+      ...state,
+      toasts: [],
+    }
+  }
+  return {
+    ...state,
+    toasts: state.toasts.filter((t) => t.id !== action.toastId),
+  };
+}
+
+export function reducer(state, action) {
   switch (action.type) {
     case "ADD_TOAST":
-      return {
-        ...state,
-        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
-      };
+      return addToast(state, action);
 
     case "UPDATE_TOAST":
-      return {
-        ...state,
-        toasts: state.toasts.map((t) =>
-          t.id === action.toast.id ? { ...t, ...action.toast } : t),
-      };
+      return updateToast(state, action);
 
-    case "DISMISS_TOAST": {
-      const { toastId } = action
+    case "DISMISS_TOAST":
+      return dismissToast(state, action);
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
-      if (toastId) {
-        addToRemoveQueue(toastId)
-      } else {
-        state.toasts.forEach((toast) => {
-          addToRemoveQueue(toast.id)
-        })
-      }
-
-      return {
-        ...state,
-        toasts: state.toasts.map((t) =>
-          t.id === toastId || toastId === undefined
-            ? {
-                ...t,
-                open: false,
-              }
-            : t),
-      };
-    }
     case "REMOVE_TOAST":
-      if (action.toastId === undefined) {
-        return {
-          ...state,
-          toasts: [],
-        }
-      }
-      return {
-        ...state,
-        toasts: state.toasts.filter((t) => t.id !== action.toastId),
-      };
+      return removeToast(state, action);
+
+    default:
+      return state;
   }
 }
 
@@ -99,6 +116,16 @@ function dispatch(action) {
   listeners.forEach((listener) => {
     listener(memoryState)
   })
+}
+
+function subscribeToastListener(listener) {
+  listeners.push(listener)
+  return () => {
+    const index = listeners.indexOf(listener)
+    if (index > -1) {
+      listeners.splice(index, 1)
+    }
+  };
 }
 
 function toast({
@@ -136,14 +163,8 @@ function useToast() {
   const [state, setState] = React.useState(memoryState)
 
   React.useEffect(() => {
-    listeners.push(setState)
-    return () => {
-      const index = listeners.indexOf(setState)
-      if (index > -1) {
-        listeners.splice(index, 1)
-      }
-    };
-  }, [state])
+    return subscribeToastListener(setState);
+  }, [setState])
 
   return {
     ...state,

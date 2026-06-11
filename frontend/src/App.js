@@ -42,7 +42,6 @@ import {
   School,
   ShieldCheck,
   Sparkles,
-  Users,
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -203,6 +202,100 @@ function Logo({ footer = false }) {
   );
 }
 
+function DesktopNavigation() {
+  return (
+    <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation" data-testid="desktop-navigation">
+      {navItems.map((item) => (
+        <NavLink
+          key={item.path}
+          to={item.path}
+          className={({ isActive }) =>
+            `rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
+              isActive ? "bg-teal/10 text-navy" : "text-navy/70 hover:bg-slate hover:text-navy"
+            }`
+          }
+          data-testid={`desktop-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}
+        >
+          {item.label}
+        </NavLink>
+      ))}
+      <ServicesDropdown />
+    </nav>
+  );
+}
+
+function ServicesDropdown() {
+  return (
+    <div className="group relative">
+      <button
+        className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-navy/70 transition-colors hover:bg-slate hover:text-navy"
+        data-testid="desktop-services-dropdown-button"
+        aria-label="Open service submenu"
+      >
+        Service Details <ChevronDown className="h-4 w-4" />
+      </button>
+      <div className="invisible absolute left-0 top-full w-72 translate-y-2 rounded-3xl border border-navy/10 bg-white p-3 opacity-0 shadow-2xl shadow-navy/10 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+        {services.map((service) => (
+          <Link
+            key={service.title}
+            to="/services"
+            className="block rounded-2xl px-4 py-3 text-sm font-semibold text-navy transition-colors hover:bg-slate"
+            data-testid={`desktop-dropdown-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}
+          >
+            {service.title}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileNavigation({ closeMenu }) {
+  return (
+    <nav className="flex flex-col gap-2" aria-label="Mobile navigation" data-testid="mobile-navigation">
+      {navItems.map((item) => (
+        <Link
+          key={item.path}
+          to={item.path}
+          onClick={closeMenu}
+          className="rounded-2xl bg-slate px-5 py-4 font-display text-lg font-semibold text-navy"
+          data-testid={`mobile-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}
+        >
+          {item.label}
+        </Link>
+      ))}
+      <Link
+        to="/become-a-client"
+        onClick={closeMenu}
+        className="rounded-2xl bg-teal px-5 py-4 text-center font-display text-lg font-semibold text-white"
+        data-testid="mobile-nav-become-client-link"
+      >
+        Become a Client
+      </Link>
+    </nav>
+  );
+}
+
+function MobileMenu({ open, setOpen }) {
+  const closeMenu = () => setOpen(false);
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon" className="rounded-full border-navy/10 lg:hidden" data-testid="mobile-menu-open-button" aria-label="Open menu">
+          <Menu className="h-5 w-5 text-navy" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="w-[88vw] border-l-0 bg-white p-6" data-testid="mobile-menu-panel">
+        <div className="mt-8 flex flex-col gap-6">
+          <Logo />
+          <MobileNavigation closeMenu={closeMenu} />
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 function Header() {
   const [open, setOpen] = useState(false);
 
@@ -210,81 +303,13 @@ function Header() {
     <header className="sticky top-0 z-50 border-b border-navy/5 bg-white/85 backdrop-blur-xl" data-testid="site-header">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
         <Logo />
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation" data-testid="desktop-navigation">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
-                  isActive ? "bg-teal/10 text-navy" : "text-navy/70 hover:bg-slate hover:text-navy"
-                }`
-              }
-              data-testid={`desktop-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}
-            >
-              {item.label}
-            </NavLink>
-          ))}
-          <div className="group relative">
-            <button
-              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-navy/70 transition-colors hover:bg-slate hover:text-navy"
-              data-testid="desktop-services-dropdown-button"
-              aria-label="Open service submenu"
-            >
-              Service Details <ChevronDown className="h-4 w-4" />
-            </button>
-            <div className="invisible absolute left-0 top-full w-72 translate-y-2 rounded-3xl border border-navy/10 bg-white p-3 opacity-0 shadow-2xl shadow-navy/10 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-              {services.map((service) => (
-                <Link
-                  key={service.title}
-                  to="/services"
-                  className="block rounded-2xl px-4 py-3 text-sm font-semibold text-navy transition-colors hover:bg-slate"
-                  data-testid={`desktop-dropdown-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}
-                >
-                  {service.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </nav>
+        <DesktopNavigation />
         <div className="hidden items-center gap-3 lg:flex">
           <Button asChild className="rounded-full bg-teal px-6 py-5 font-bold text-white hover:bg-teal-dark" data-testid="header-become-client-button">
             <Link to="/become-a-client">Become a Client</Link>
           </Button>
         </div>
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="rounded-full border-navy/10 lg:hidden" data-testid="mobile-menu-open-button" aria-label="Open menu">
-              <Menu className="h-5 w-5 text-navy" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="w-[88vw] border-l-0 bg-white p-6" data-testid="mobile-menu-panel">
-            <div className="mt-8 flex flex-col gap-6">
-              <Logo />
-              <nav className="flex flex-col gap-2" aria-label="Mobile navigation" data-testid="mobile-navigation">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setOpen(false)}
-                    className="rounded-2xl bg-slate px-5 py-4 font-display text-lg font-semibold text-navy"
-                    data-testid={`mobile-nav-${item.label.toLowerCase().replaceAll(" ", "-")}-link`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <Link
-                  to="/become-a-client"
-                  onClick={() => setOpen(false)}
-                  className="rounded-2xl bg-teal px-5 py-4 text-center font-display text-lg font-semibold text-white"
-                  data-testid="mobile-nav-become-client-link"
-                >
-                  Become a Client
-                </Link>
-              </nav>
-            </div>
-          </SheetContent>
-        </Sheet>
+        <MobileMenu open={open} setOpen={setOpen} />
       </div>
     </header>
   );
@@ -424,7 +449,7 @@ function ParentConnection() {
         </div>
         <div>
           <SectionLabel testId="parent-connection-eyebrow">Family-centered support</SectionLabel>
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="parent-connection-title">You Shouldn't Have to Navigate This Journey Alone</h2>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="parent-connection-title">You Shouldn&apos;t Have to Navigate This Journey Alone</h2>
           <p className="mt-6 text-base leading-relaxed text-navy/75 md:text-lg" data-testid="parent-connection-copy">
             When your family is looking for answers, the process can feel overwhelming. Our team helps you understand ABA therapy, insurance steps, assessment needs, and what progress can look like at home.
           </p>
@@ -540,7 +565,7 @@ function TeamSection() {
             <h3 className="font-display text-2xl font-semibold text-navy" data-testid="team-director-name">Rosalyn Holmes, BCBA</h3>
             <p className="mt-1 font-bold text-teal" data-testid="team-director-role">Clinical Director</p>
             <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="team-director-copy">
-              Rosalyn leads Au-Some Teacher ABA Services with a commitment to compassionate, evidence-based care. Her approach blends behavioral science, educator insight, and a deep respect for every family's goals.
+              Rosalyn leads Au-Some Teacher ABA Services with a commitment to compassionate, evidence-based care. Her approach blends behavioral science, educator insight, and a deep respect for every family&apos;s goals.
             </p>
           </div>
         </div>
@@ -622,20 +647,21 @@ function FinalCTA() {
   );
 }
 
-function LeadForm({ kind = "client", title = "Tell us how we can help", compact = false }) {
+const emptyLeadForm = {
+  name: "",
+  email: "",
+  phone: "",
+  child_age: "",
+  insurance: "",
+  city: "",
+  message: "",
+};
+
+function useLeadForm(kind) {
   const [submitting, setSubmitting] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    child_age: "",
-    insurance: "",
-    city: "",
-    message: "",
-  });
+  const [form, setForm] = useState(emptyLeadForm);
 
   const update = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
-
   const submit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
@@ -644,7 +670,7 @@ function LeadForm({ kind = "client", title = "Tell us how we can help", compact 
       toast.success("Thank you — your message was received.", {
         description: "Our team will follow up with next steps soon.",
       });
-      setForm({ name: "", email: "", phone: "", child_age: "", insurance: "", city: "", message: "" });
+      setForm(emptyLeadForm);
     } catch (error) {
       toast.error("We couldn't send the form yet.", {
         description: "Please check the required fields and try again.",
@@ -654,42 +680,56 @@ function LeadForm({ kind = "client", title = "Tell us how we can help", compact 
     }
   };
 
+  return { form, submitting, update, submit };
+}
+
+function LeadTextField({ kind, name, label, value, onChange, required = false, type = "text" }) {
+  const fieldId = `${kind}-${name.replaceAll("_", "-")}`;
+
   return (
-    <form onSubmit={submit} className="rounded-[2rem] bg-white p-6 shadow-xl shadow-navy/10 md:p-8" data-testid={`${kind}-lead-form`}>
-      <h2 className="font-display text-2xl font-semibold text-navy" data-testid={`${kind}-lead-form-title`}>{title}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-navy/65" data-testid={`${kind}-lead-form-copy`}>Share a few details and we’ll help you find the right next step.</p>
+    <div className="space-y-2">
+      <Label htmlFor={fieldId} className="text-navy" data-testid={`${fieldId}-label`}>{label}</Label>
+      <Input
+        id={fieldId}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="h-12 rounded-2xl border-navy/10 bg-slate px-4"
+        data-testid={`${fieldId}-input`}
+      />
+    </div>
+  );
+}
+
+function LeadFields({ kind, form, update, compact }) {
+  return (
+    <>
       <div className="mt-7 grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor={`${kind}-name`} className="text-navy" data-testid={`${kind}-name-label`}>Name</Label>
-          <Input id={`${kind}-name`} name="name" value={form.name} onChange={update} required className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-name-input`} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor={`${kind}-email`} className="text-navy" data-testid={`${kind}-email-label`}>Email</Label>
-          <Input id={`${kind}-email`} name="email" type="email" value={form.email} onChange={update} required className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-email-input`} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor={`${kind}-phone`} className="text-navy" data-testid={`${kind}-phone-label`}>Phone</Label>
-          <Input id={`${kind}-phone`} name="phone" value={form.phone} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-phone-input`} />
-        </div>
-        {!compact && (
-          <div className="space-y-2">
-            <Label htmlFor={`${kind}-child-age`} className="text-navy" data-testid={`${kind}-child-age-label`}>Child's age</Label>
-            <Input id={`${kind}-child-age`} name="child_age" value={form.child_age} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-child-age-input`} />
-          </div>
-        )}
-        <div className="space-y-2">
-          <Label htmlFor={`${kind}-insurance`} className="text-navy" data-testid={`${kind}-insurance-label`}>Insurance</Label>
-          <Input id={`${kind}-insurance`} name="insurance" value={form.insurance} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-insurance-input`} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor={`${kind}-city`} className="text-navy" data-testid={`${kind}-city-label`}>City</Label>
-          <Input id={`${kind}-city`} name="city" value={form.city} onChange={update} className="h-12 rounded-2xl border-navy/10 bg-slate px-4" data-testid={`${kind}-city-input`} />
-        </div>
+        <LeadTextField kind={kind} name="name" label="Name" value={form.name} onChange={update} required />
+        <LeadTextField kind={kind} name="email" label="Email" value={form.email} onChange={update} required type="email" />
+        <LeadTextField kind={kind} name="phone" label="Phone" value={form.phone} onChange={update} />
+        {!compact && <LeadTextField kind={kind} name="child_age" label="Child's age" value={form.child_age} onChange={update} />}
+        <LeadTextField kind={kind} name="insurance" label="Insurance" value={form.insurance} onChange={update} />
+        <LeadTextField kind={kind} name="city" label="City" value={form.city} onChange={update} />
       </div>
       <div className="mt-5 space-y-2">
         <Label htmlFor={`${kind}-message`} className="text-navy" data-testid={`${kind}-message-label`}>How can we help?</Label>
         <Textarea id={`${kind}-message`} name="message" value={form.message} onChange={update} className="min-h-32 rounded-2xl border-navy/10 bg-slate px-4 py-3" data-testid={`${kind}-message-textarea`} />
       </div>
+    </>
+  );
+}
+
+function LeadForm({ kind = "client", title = "Tell us how we can help", compact = false }) {
+  const { form, submitting, update, submit } = useLeadForm(kind);
+
+  return (
+    <form onSubmit={submit} className="rounded-[2rem] bg-white p-6 shadow-xl shadow-navy/10 md:p-8" data-testid={`${kind}-lead-form`}>
+      <h2 className="font-display text-2xl font-semibold text-navy" data-testid={`${kind}-lead-form-title`}>{title}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-navy/65" data-testid={`${kind}-lead-form-copy`}>Share a few details and we’ll help you find the right next step.</p>
+      <LeadFields kind={kind} form={form} update={update} compact={compact} />
       <Button type="submit" disabled={submitting} className="mt-6 w-full rounded-full bg-teal py-6 font-bold text-white hover:bg-teal-dark" data-testid={`${kind}-submit-button`}>
         {submitting ? "Sending..." : "Submit Request"}
       </Button>
@@ -746,7 +786,7 @@ function InsurancePage() {
           <div>
             <SectionLabel testId="insurance-detail-eyebrow">Accepted plans</SectionLabel>
             <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl" data-testid="insurance-detail-title">Start with a benefit check.</h2>
-            <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="insurance-detail-copy">We currently list Texas Children's Health Plan, Blue Cross Blue Shield of Texas, and Aetna. Plan coverage varies, so verification is the best first step.</p>
+            <p className="mt-5 text-base leading-relaxed text-navy/75" data-testid="insurance-detail-copy">We currently list Texas Children&apos;s Health Plan, Blue Cross Blue Shield of Texas, and Aetna. Plan coverage varies, so verification is the best first step.</p>
           </div>
           <LeadForm kind="insurance" title="Verify your benefits" compact />
         </div>
