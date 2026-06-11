@@ -4,13 +4,14 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
-import smtplib
+import asyncio
+import html
+import resend
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
-from email.message import EmailMessage
 
 
 ROOT_DIR = Path(__file__).parent
@@ -64,49 +65,69 @@ class LeadResponse(BaseModel):
     created_at: str
     destination_email: EmailStr
     notification_sent: bool
+    notification_error: Optional[str] = None
+    email_provider_id: Optional[str] = None
 
 def get_contact_email() -> str:
     return os.environ['CONTACT_EMAIL']
 
 def email_notifications_configured() -> bool:
-    required_keys = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USERNAME', 'SMTP_PASSWORD', 'CONTACT_EMAIL']
+    required_keys = ['RESEND_API_KEY', 'SENDER_EMAIL', 'CONTACT_EMAIL']
     return all(os.environ.get(key) for key in required_keys)
 
-def build_lead_email(lead_doc: dict[str, object]) -> EmailMessage:
-    destination = get_contact_email()
-    kind = str(lead_doc.get('kind', 'lead')).title()
-    subject = f"New Au-Some Teacher {kind} Form Submission"
-    lines = [
-        f"Form type: {lead_doc.get('kind', '')}",
-        f"Name: {lead_doc.get('name', '')}",
-        f"Email: {lead_doc.get('email', '')}",
-        f"Phone: {lead_doc.get('phone', '')}",
-        f"Child age: {lead_doc.get('child_age', '')}",
-        f"Insurance: {lead_doc.get('insurance', '')}",
-        f"City: {lead_doc.get('city', '')}",
-        f"Message: {lead_doc.get('message', '')}",
-        f"Submitted at: {lead_doc.get('created_at', '')}",
-    ]
-    message = EmailMessage()
-    message['Subject'] = subject
-    message['From'] = os.environ.get('SMTP_FROM_EMAIL', destination)
-    message['To'] = destination
-    message['Reply-To'] = str(lead_doc.get('email', destination))
-    message.set_content('\n'.join(lines))
-    return message
+def lead_value(lead_doc: dict[str, object], key: str) -> str:
+    value = lead_doc.get(key)
+    return "" if value is None else str(value)
 
-def send_lead_notification(lead_doc: dict[str, object]) -> bool:
+def build_lead_email_html(lead_doc: dict[str, object]) -> str:
+    fields = [
+        ("Form type", "kind"),
+        ("Name", "name"),
+        ("Email", "email"),
+        ("Phone", "phone"),
+        ("Child age", "child_age"),
+        ("Insurance", "insurance"),
+        ("City", "city"),
+        ("Message", "message"),
+        ("Submitted at", "created_at"),
+    ]
+    rows = "".join(
+        f"""
+        <tr>
+          <td style=\"padding:12px 16px;border-bottom:1px solid #E2E8F0;color:#4A627A;font-weight:700;width:160px;\">{label}</td>
+          <td style=\"padding:12px 16px;border-bottom:1px solid #E2E8F0;color:#163A5F;\">{html.escape(lead_value(lead_doc, key))}</td>
+        </tr>
+        """
+        for label, key in fields
+    )
+    return f"""
+    <div style=\"font-family:Arial,sans-serif;background:#F7F9FC;padding:24px;\">
+      <div style=\"max-width:680px;margin:0 auto;background:#FFFFFF;border-radius:18px;overflow:hidden;border:1px solid #E2E8F0;\">
+        <div style=\"background:#163A5F;padding:24px;color:#FFFFFF;\">
+          <h1 style=\"margin:0;font-size:24px;\">New Au-Some Teacher Form Submission</h1>
+          <p style=\"margin:8px 0 0;color:#D7E7F0;\">A website visitor submitted the {html.escape(lead_value(lead_doc, 'kind'))} form.</p>
+        </div>
+        <table style=\"width:100%;border-collapse:collapse;\">{rows}</table>
+      </div>
+    </div>
+    """
+
+async def send_lead_notification(lead_doc: dict[str, object]) -> bool:
     if not email_notifications_configured():
-        logger.warning('Lead email notification skipped because SMTP settings are not configured')
+        logger.warning('Lead email notification skipped because Resend settings are not configured')
         return False
 
-    message = build_lead_email(lead_doc)
-    smtp_host = os.environ['SMTP_HOST']
-    smtp_port = int(os.environ['SMTP_PORT'])
-    with smtplib.SMTP(smtp_host, smtp_port, timeout=15) as smtp:
-        smtp.starttls()
-        smtp.login(os.environ['SMTP_USERNAME'], os.environ['SMTP_PASSWORD'])
-        smtp.send_message(message)
+    resend.api_key = os.environ['RESEND_API_KEY']
+    kind = lead_value(lead_doc, 'kind').title() or 'Lead'
+    params = {
+        "from": os.environ['SENDER_EMAIL'],
+        "to": [get_contact_email()],
+        "reply_to": lead_value(lead_doc, 'email'),
+        "subject": f"New Au-Some Teacher {kind} Form Submission",
+        "html": build_lead_email_html(lead_doc),
+    }
+    response = await asyncio.to_thread(resend.Emails.send, params)
+    lead_doc["email_provider_id"] = response.get("id") if isinstance(response, dict) else None
     return True
 
 # Add your routes to the router instead of directly to app
@@ -145,15 +166,25 @@ async def create_lead(input: LeadCreate) -> dict[str, object]:
     lead_doc["created_at"] = datetime.now(timezone.utc).isoformat()
     lead_doc["destination_email"] = get_contact_email()
     lead_doc["notification_sent"] = False
+    lead_doc["notification_error"] = None
+    lead_doc["email_provider_id"] = None
     await db.leads.insert_one(lead_doc.copy())
     try:
-        notification_sent = send_lead_notification(lead_doc)
+        notification_sent = await send_lead_notification(lead_doc)
         lead_doc["notification_sent"] = notification_sent
         await db.leads.update_one(
             {"id": lead_doc["id"]},
-            {"$set": {"notification_sent": notification_sent}}
+            {"$set": {
+                "notification_sent": notification_sent,
+                "email_provider_id": lead_doc.get("email_provider_id"),
+            }}
         )
-    except Exception:
+    except Exception as exc:
+        lead_doc["notification_error"] = str(exc)
+        await db.leads.update_one(
+            {"id": lead_doc["id"]},
+            {"$set": {"notification_error": lead_doc["notification_error"]}}
+        )
         logger.exception('Lead saved, but email notification failed')
     return lead_doc
 
@@ -161,6 +192,7 @@ async def create_lead(input: LeadCreate) -> dict[str, object]:
 async def get_contact_routing() -> dict[str, object]:
     return {
         "contact_email": get_contact_email(),
+        "sender_email": os.environ.get('SENDER_EMAIL'),
         "forms_save_to_database": True,
         "email_notifications_configured": email_notifications_configured(),
     }

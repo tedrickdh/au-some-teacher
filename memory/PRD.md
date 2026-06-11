@@ -56,3 +56,11 @@ Redesign https://www.au-someteacher.com/ into a premium, modern, mobile-first we
 - Backend has SMTP email notification support ready, but notification_sent remains false until SMTP credentials are provided in backend/.env.
 - Added /api/contact-routing to verify current contact destination and email-notification configuration.
 - Verified with API tests and browser form submission.
+
+
+## Resend Email Notification Update
+- Resend SDK installed and backend-only RESEND_API_KEY configured.
+- Sender email configured as forms@ausometeacher.com and notification recipient remains info@ausometeacher.com.
+- Forms save to MongoDB before attempting email, so submissions are preserved even if Resend fails.
+- Lead responses/records now include notification_sent, notification_error, email_provider_id, and destination_email.
+- Live test confirmed Resend is currently blocked because ausometeacher.com is not verified in Resend. Complete domain verification in Resend to enable inbox delivery.

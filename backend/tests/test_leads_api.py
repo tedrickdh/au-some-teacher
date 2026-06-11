@@ -57,6 +57,8 @@ def test_create_client_lead_success(api_client: requests.Session) -> None:
     assert data["city"] == payload["city"]
     assert data["destination_email"] == "info@ausometeacher.com"
     assert isinstance(data["notification_sent"], bool)
+    assert "notification_error" in data
+    assert "email_provider_id" in data
 
     # created_at should be an ISO datetime
     parsed = datetime.fromisoformat(data["created_at"].replace("Z", "+00:00"))
