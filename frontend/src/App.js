@@ -688,19 +688,42 @@ function LeadTextField({ kind, name, label, value, onChange, required = false, t
 }
 
 function LeadFields({ kind, form, update, compact }) {
+  const isCareer = kind === "career";
+
   return (
     <>
       <div className="mt-7 grid gap-5 sm:grid-cols-2">
         <LeadTextField kind={kind} name="name" label="Name" value={form.name} onChange={update} required />
         <LeadTextField kind={kind} name="email" label="Email" value={form.email} onChange={update} required type="email" />
         <LeadTextField kind={kind} name="phone" label="Phone" value={form.phone} onChange={update} />
-        {!compact && <LeadTextField kind={kind} name="child_age" label="Child's age" value={form.child_age} onChange={update} />}
-        <LeadTextField kind={kind} name="insurance" label="Insurance" value={form.insurance} onChange={update} />
+
+        {!compact && !isCareer && (
+          <LeadTextField kind={kind} name="child_age" label="Child's age" value={form.child_age} onChange={update} />
+        )}
+
+        <LeadTextField
+          kind={kind}
+          name="insurance"
+          label={isCareer ? "Position Interested In" : "Insurance"}
+          value={form.insurance}
+          onChange={update}
+        />
+
         <LeadTextField kind={kind} name="city" label="City" value={form.city} onChange={update} />
       </div>
+
       <div className="mt-5 space-y-2">
-        <Label htmlFor={`${kind}-message`} className="text-navy" data-testid={`${kind}-message-label`}>How can we help?</Label>
-        <Textarea id={`${kind}-message`} name="message" value={form.message} onChange={update} className="min-h-32 rounded-2xl border-navy/10 bg-slate px-4 py-3" data-testid={`${kind}-message-textarea`} />
+        <Label htmlFor={`${kind}-message`} className="text-navy" data-testid={`${kind}-message-label`}>
+          {isCareer ? "Tell us about your experience" : "How can we help?"}
+        </Label>
+        <Textarea
+          id={`${kind}-message`}
+          name="message"
+          value={form.message}
+          onChange={update}
+          className="min-h-32 rounded-2xl border-navy/10 bg-slate px-4 py-3"
+          data-testid={`${kind}-message-textarea`}
+        />
       </div>
     </>
   );
