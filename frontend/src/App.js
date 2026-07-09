@@ -701,13 +701,17 @@ function LeadFields({ kind, form, update, compact }) {
           <LeadTextField kind={kind} name="child_age" label="Child's age" value={form.child_age} onChange={update} />
         )}
 
-        <LeadTextField
-          kind={kind}
-          name="insurance"
-          label={isCareer ? "Position Interested In" : "Insurance"}
-          value={form.insurance}
-          onChange={update}
-        />
+        {!isCareer && (
+  {!isCareer && (
+  <LeadTextField
+    kind={kind}
+    name="insurance"
+    label="Insurance"
+    value={form.insurance}
+    onChange={update}
+  />
+)}
+)}
 
         <LeadTextField kind={kind} name="city" label="City" value={form.city} onChange={update} />
       </div>
