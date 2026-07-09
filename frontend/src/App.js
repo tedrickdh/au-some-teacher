@@ -540,7 +540,11 @@ function TeamSection() {
     <section className="bg-slate py-20 md:py-32" data-testid="team-section">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 md:grid-cols-[0.85fr_1.15fr] md:px-8">
         <div className="overflow-hidden rounded-[2rem] bg-white p-2 shadow-xl shadow-navy/10">
-          <img src={assets.team} alt="Rosalyn Holmes, BCBA, Clinical Director" className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center" data-testid="team-director-image" />
+          <img
+  src={assets.team}
+  alt="Rosalyn Holmes, BCBA, Clinical Director"
+  className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center"
+/>
         </div>
         <div>
           <SectionLabel testId="team-eyebrow">Leadership</SectionLabel>
