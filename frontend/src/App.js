@@ -35,7 +35,7 @@ const assets = {
   logo: "https://customer-assets.emergentagent.com/job_9999b4e2-e562-4f7d-b65c-b27bad5fffb6/artifacts/7m2ruj3w_brain-with-pencil1.png",
   hero: "https://images.pexels.com/photos/7447263/pexels-photo-7447263.jpeg",
   parent: "https://images.pexels.com/photos/8653951/pexels-photo-8653951.jpeg",
-  team: "https://images.pexels.com/photos/12660379/pexels-photo-12660379.jpeg",
+  team: "https://drive.google.com/uc?export=view&id=1ocPEY6gsbOeFymhBP5Bt9i79MO0vtTll",
   services: "https://images.pexels.com/photos/4934170/pexels-photo-4934170.jpeg",
   careers: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg",
   about: "https://images.pexels.com/photos/8363095/pexels-photo-8363095.jpeg",
@@ -540,7 +540,7 @@ function TeamSection() {
     <section className="bg-slate py-20 md:py-32" data-testid="team-section">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 md:grid-cols-[0.85fr_1.15fr] md:px-8">
         <div className="overflow-hidden rounded-[2rem] bg-white p-2 shadow-xl shadow-navy/10">
-          <img src={assets.team} alt="Professional clinical director placeholder" className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center" data-testid="team-director-image" />
+          <img src={assets.team} alt="Rosalyn Holmes, BCBA, Clinical Director" className="aspect-[4/5] w-full rounded-[1.5rem] object-cover object-center" data-testid="team-director-image" />
         </div>
         <div>
           <SectionLabel testId="team-eyebrow">Leadership</SectionLabel>
