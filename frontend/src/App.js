@@ -822,40 +822,52 @@ function LeadForm({ kind = "client", title = "Tell us how we can help", compact 
 
 function HomePage() {
   return (
-    <main data-testid="homepage-main">
-      <Hero />
-      <InsurancePreview />
-      <ParentConnection />
-      <ServicesSection />
-      <ProcessSection />
-      <WhyChooseUs />
-      <TeamSection />
-      <Testimonials />
-      <FAQSection />
-      <FinalCTA />
-    </main>
+    <>
+      
+
+      <main data-testid="homepage-main">
+        <Hero />
+        <InsurancePreview />
+        <ParentConnection />
+        <ServicesSection />
+        <ProcessSection />
+        <WhyChooseUs />
+        <TeamSection />
+        <Testimonials />
+        <FAQSection />
+        <FinalCTA />
+      </main>
+    </>
   );
 }
 
 function ServicesPage() {
   return (
-    <main data-testid="services-page-main">
-      <PageHero
-        eyebrow="Services"
-        title="Therapy, training, and collaboration built around your child."
-        text="Explore the core services Au-Some Teacher ABA Services provides for families, schools, and children across Greater Houston."
-        image={assets.services}
-        testId="services-page-hero"
-      />
-      <ServicesSection detailed />
-      <ProcessSection />
-      <FinalCTA />
-    </main>
+    <>
+      
+
+      <main data-testid="services-page-main">
+        <PageHero
+          eyebrow="Services"
+          title="Therapy, training, and collaboration built around your child."
+          text="Explore the core services Au-Some Teacher ABA Services provides for families, schools, and children across Greater Houston."
+          image={assets.services}
+          testId="services-page-hero"
+        />
+        <ServicesSection detailed />
+        <ProcessSection />
+        <FinalCTA />
+      </main>
+    </>
   );
 }
 
 function InsurancePage() {
-  return (
+  
+    return (
+  <>
+    
+
     <main data-testid="insurance-page-main">
       <PageHero
         eyebrow="Insurance"
@@ -875,8 +887,9 @@ function InsurancePage() {
         </div>
       </section>
       <FAQSection />
-    </main>
-  );
+        </main>
+  </>
+);
 }
 
 function AboutPage() {
