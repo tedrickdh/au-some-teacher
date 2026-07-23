@@ -52,7 +52,6 @@ const serviceAreas = [
 
 const navItems = [
   { label: "Home", path: "/" },
-  { label: "Services", path: "/services" },
   { label: "Insurance", path: "/insurance" },
   { label: "About Us", path: "/about" },
   { label: "Careers", path: "/careers" },
@@ -61,35 +60,147 @@ const navItems = [
 const services = [
   {
     title: "ABA Therapy",
+    shortTitle: "In-Home ABA Therapy",
+    path: "/services/aba-therapy",
     icon: Icons.Brain,
+    image: assets.hero,
     summary:
       "Individualized in-home therapy focused on communication, behavior, independence, social skills, and daily routines.",
     detail:
       "Our ABA programs are designed around each child's strengths, needs, family routines, and long-term goals. Care plans are BCBA-led and adjusted as progress is made.",
+    pageTitle: "In-home ABA therapy built around your child and family.",
+    pageText:
+      "Our BCBA-led programs help children build practical skills where daily life happens—at home, in the community, and alongside the people who support them most.",
+    sectionTitle: "Meaningful skills for everyday life.",
+    sectionText:
+      "Treatment goals are selected with families and updated as the child grows. Sessions combine structured teaching, play, natural routines, caregiver collaboration, and ongoing progress monitoring.",
+    focusAreas: [
+      [Icons.MessagesSquare, "Communication", "Requesting, expressing needs, conversation, and understanding directions."],
+      [Icons.Hand, "Behavior Support", "Teaching safer, more functional ways to communicate and respond."],
+      [Icons.Users, "Social Skills", "Play, turn-taking, shared attention, and participation with others."],
+      [Icons.Home, "Daily Living", "Routines that support independence at home and in the community."],
+      [Icons.ShieldCheck, "Safety Skills", "Building practical responses for common safety situations."],
+      [Icons.Sparkles, "Confidence", "Helping children practice new skills through positive, supportive experiences."],
+    ],
+    steps: [
+      "Family goals and routines guide the treatment plan.",
+      "A BCBA develops individualized teaching strategies.",
+      "The therapy team practices skills during real activities.",
+      "Progress is reviewed and goals are adjusted over time.",
+    ],
+    faqs: [
+      ["Where does ABA therapy take place?", "Our primary service model is in-home ABA therapy, with caregiver participation and collaboration with other settings when appropriate."],
+      ["How are treatment goals chosen?", "Goals are based on assessment results, caregiver priorities, safety needs, daily routines, and skills that can improve independence and quality of life."],
+      ["Who oversees treatment?", "A Board Certified Behavior Analyst leads the treatment plan, monitors progress, and provides ongoing clinical supervision."],
+    ],
   },
   {
     title: "Parent Training",
+    shortTitle: "Parent & Caregiver Training",
+    path: "/services/parent-training",
     icon: Icons.HandHeart,
+    image: assets.parent,
     summary:
       "Practical coaching that helps caregivers feel confident supporting progress between therapy sessions.",
     detail:
       "Families learn strategies they can use during meals, transitions, play, homework, community outings, and everyday moments at home.",
+    pageTitle: "Practical coaching for the moments that matter most.",
+    pageText:
+      "Caregiver training turns therapy strategies into tools families can use during meals, bedtime, transitions, play, schoolwork, and community routines.",
+    sectionTitle: "Support that fits your family—not the other way around.",
+    sectionText:
+      "Parent and caregiver training is collaborative. We begin with the situations that matter to your family, model useful strategies, practice together, and adjust the plan based on what works in real life.",
+    focusAreas: [
+      [Icons.RefreshCw, "Transitions", "Preparing for changes, reducing stress, and building predictable routines."],
+      [Icons.Utensils, "Meals", "Supporting communication, participation, and manageable family routines."],
+      [Icons.MoonStar, "Bedtime", "Creating clear expectations and consistent evening routines."],
+      [Icons.Gamepad2, "Play", "Building connection, communication, flexibility, and shared enjoyment."],
+      [Icons.BookOpenCheck, "Homework", "Using practical supports for attention, task completion, and breaks."],
+      [Icons.MapPin, "Community Outings", "Preparing for stores, appointments, family events, and recreation."],
+    ],
+    steps: [
+      "We identify the routines your family wants to improve.",
+      "The BCBA explains and models practical strategies.",
+      "Caregivers practice with support and feedback.",
+      "The plan is refined so it works in everyday life.",
+    ],
+    faqs: [
+      ["Do parents need ABA experience?", "No. Strategies are explained in clear, practical language and practiced within routines your family already knows."],
+      ["Is caregiver training part of treatment?", "Caregiver participation is an important part of helping skills carry over beyond direct therapy sessions."],
+      ["Can training focus on a specific routine?", "Yes. Coaching can focus on priorities such as transitions, communication, homework, meals, bedtime, safety, or community outings."],
+    ],
   },
   {
     title: "Assessments",
+    shortTitle: "ABA Assessments",
+    path: "/services/assessments",
     icon: Icons.ClipboardCheck,
+    image: assets.services,
     summary:
       "Thoughtful skill and behavior assessments that guide goals, treatment planning, and insurance authorization.",
     detail:
       "We use observation, caregiver input, records review, and standardized tools to understand what support will be most meaningful.",
+    pageTitle: "A thoughtful assessment is the foundation of effective care.",
+    pageText:
+      "Our assessment process brings together caregiver priorities, direct observation, records, and skill-based information to create an individualized treatment plan.",
+    sectionTitle: "Understanding strengths, needs, and the right next step.",
+    sectionText:
+      "Assessment is not about reducing a child to a score. It is a structured way to understand current skills, barriers, family priorities, and the support that may make the greatest difference.",
+    focusAreas: [
+      [Icons.MessageSquareText, "Caregiver Interview", "Learning about concerns, priorities, routines, and family goals."],
+      [Icons.Eye, "Direct Observation", "Watching skills and behavior within relevant activities and settings."],
+      [Icons.FolderSearch, "Records Review", "Reviewing available diagnostic, educational, medical, and therapy information."],
+      [Icons.ListChecks, "Skill Assessment", "Identifying current strengths and areas that may benefit from instruction."],
+      [Icons.Target, "Goal Development", "Turning assessment findings into measurable, meaningful treatment goals."],
+      [Icons.FileCheck2, "Treatment Planning", "Preparing recommendations and documentation for the next stage of care."],
+    ],
+    steps: [
+      "We gather intake information and available records.",
+      "A BCBA meets with the family and observes the child.",
+      "Assessment information is reviewed and organized.",
+      "An individualized treatment plan is developed and discussed.",
+    ],
+    faqs: [
+      ["Is this a diagnostic autism evaluation?", "Our ABA assessment supports treatment planning. Families seeking an autism diagnosis should work with a qualified diagnostic provider."],
+      ["What should families provide?", "Helpful items may include diagnostic reports, insurance information, school records, prior evaluations, therapy reports, and a list of current concerns."],
+      ["What happens after the assessment?", "The BCBA reviews recommendations, develops goals, and completes the documentation needed for treatment planning and applicable authorization steps."],
+    ],
   },
   {
     title: "School Collaboration",
+    shortTitle: "School Collaboration",
+    path: "/services/school-collaboration",
     icon: Icons.School,
+    image: assets.about,
     summary:
       "Coordination with educators and school teams to support consistency across learning environments.",
     detail:
       "When appropriate, we partner with schools and special education teams to align strategies and strengthen real-world skill use.",
+    pageTitle: "Helping skills carry across home, school, and everyday life.",
+    pageText:
+      "With family permission and when appropriate, we collaborate with educators and other providers so children experience clearer, more consistent support across environments.",
+    sectionTitle: "Collaboration centered on the child.",
+    sectionText:
+      "School collaboration is designed to improve communication—not replace the school team's role. We share relevant strategies, listen to educator observations, and support consistent skill use across settings.",
+    focusAreas: [
+      [Icons.MessagesSquare, "Team Communication", "Sharing relevant observations, priorities, and strategies with permission."],
+      [Icons.Repeat2, "Skill Generalization", "Helping children use learned skills with different people and in new places."],
+      [Icons.NotebookTabs, "Consistent Strategies", "Supporting clear language, routines, and reinforcement across environments."],
+      [Icons.GraduationCap, "Educational Insight", "Bringing an education-informed perspective to treatment collaboration."],
+      [Icons.Puzzle, "Coordinated Support", "Working alongside caregivers, educators, and related service providers."],
+      [Icons.Goal, "Shared Priorities", "Keeping communication focused on functional, meaningful student needs."],
+    ],
+    steps: [
+      "The family identifies a need for school collaboration.",
+      "Appropriate permissions and communication channels are established.",
+      "The BCBA gathers relevant input and shares useful strategies.",
+      "The team reviews whether skills are carrying across settings.",
+    ],
+    faqs: [
+      ["Will you attend school meetings?", "Participation depends on clinical relevance, family permission, provider availability, and school procedures."],
+      ["Do you write or control the IEP?", "No. The school team develops and implements the IEP. Our role is to provide relevant clinical input and collaborate within appropriate boundaries."],
+      ["Why does collaboration matter?", "Children often learn more successfully when the adults supporting them use compatible expectations, communication, and teaching strategies."],
+    ],
   },
 ];
 
@@ -188,7 +299,21 @@ function Logo({ footer = false }) {
 function DesktopNavigation() {
   return (
     <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation" data-testid="desktop-navigation">
-      {navItems.map((item) => (
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          `rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
+            isActive ? "bg-teal/10 text-navy" : "text-navy/70 hover:bg-slate hover:text-navy"
+          }`
+        }
+        data-testid="desktop-nav-home-link"
+      >
+        Home
+      </NavLink>
+
+      <ServicesDropdown />
+
+      {navItems.filter((item) => item.path !== "/").map((item) => (
         <NavLink
           key={item.path}
           to={item.path}
@@ -202,32 +327,68 @@ function DesktopNavigation() {
           {item.label}
         </NavLink>
       ))}
-      <ServicesDropdown />
     </nav>
   );
 }
 
 function ServicesDropdown() {
+  const { pathname } = useLocation();
+  const servicesActive = pathname === "/services" || pathname.startsWith("/services/");
+
   return (
     <div className="group relative">
-      <button
-        className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-navy/70 transition-colors hover:bg-slate hover:text-navy"
-        data-testid="desktop-services-dropdown-button"
-        aria-label="Open service submenu"
+      <div
+        className={`flex items-center rounded-full transition-colors duration-200 ${
+          servicesActive ? "bg-teal/10 text-navy" : "text-navy/70 hover:bg-slate hover:text-navy"
+        }`}
       >
-        Service Details <Icons.ChevronDown className="h-4 w-4" />
-      </button>
-      <div className="invisible absolute left-0 top-full w-72 translate-y-2 rounded-3xl border border-navy/10 bg-white p-3 opacity-0 shadow-2xl shadow-navy/10 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-        {services.map((service) => (
-          <Link
-            key={service.title}
-            to="/services"
-            className="block rounded-2xl px-4 py-3 text-sm font-semibold text-navy transition-colors hover:bg-slate"
-            data-testid={`desktop-dropdown-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}
-          >
-            {service.title}
-          </Link>
-        ))}
+        <Link
+          to="/services"
+          className="rounded-l-full py-2 pl-4 pr-2 text-sm font-semibold"
+          data-testid="desktop-nav-services-link"
+        >
+          Services
+        </Link>
+        <button
+          type="button"
+          className="rounded-r-full py-2 pl-1 pr-4"
+          data-testid="desktop-services-dropdown-button"
+          aria-label="Open services menu"
+          aria-haspopup="true"
+        >
+          <Icons.ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+        </button>
+      </div>
+
+      <div className="invisible absolute left-0 top-full z-50 w-80 translate-y-2 rounded-3xl border border-navy/10 bg-white p-3 opacity-0 shadow-2xl shadow-navy/10 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+        <Link
+          to="/services"
+          className="mb-2 block rounded-2xl bg-slate px-4 py-3 transition-colors hover:bg-teal/10"
+          data-testid="desktop-dropdown-services-overview-link"
+        >
+          <span className="block text-sm font-bold text-navy">All Services</span>
+          <span className="mt-1 block text-xs leading-relaxed text-navy/60">View our complete ABA service overview.</span>
+        </Link>
+
+        {services.map((service) => {
+          const Icon = service.icon;
+          return (
+            <Link
+              key={service.title}
+              to={service.path}
+              className="flex items-start gap-3 rounded-2xl px-4 py-3 transition-colors hover:bg-slate"
+              data-testid={`desktop-dropdown-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}
+            >
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal/10 text-teal">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-bold text-navy">{service.shortTitle}</span>
+                <span className="mt-1 block text-xs leading-relaxed text-navy/60">{service.summary}</span>
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -236,7 +397,40 @@ function ServicesDropdown() {
 function MobileNavigation({ closeMenu }) {
   return (
     <nav className="flex flex-col gap-2" aria-label="Mobile navigation" data-testid="mobile-navigation">
-      {navItems.map((item) => (
+      <Link
+        to="/"
+        onClick={closeMenu}
+        className="rounded-2xl bg-slate px-5 py-4 font-display text-lg font-semibold text-navy"
+        data-testid="mobile-nav-home-link"
+      >
+        Home
+      </Link>
+
+      <div className="rounded-2xl bg-slate p-3" data-testid="mobile-services-menu">
+        <Link
+          to="/services"
+          onClick={closeMenu}
+          className="flex items-center justify-between rounded-xl px-2 py-2 font-display text-lg font-semibold text-navy"
+          data-testid="mobile-nav-services-link"
+        >
+          Services <Icons.ArrowRight className="h-5 w-5 text-teal" />
+        </Link>
+        <div className="mt-1 flex flex-col gap-1 border-t border-navy/10 pt-2">
+          {services.map((service) => (
+            <Link
+              key={service.path}
+              to={service.path}
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-semibold text-navy/70 hover:bg-white hover:text-navy"
+              data-testid={`mobile-service-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}
+            >
+              {service.shortTitle}
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {navItems.filter((item) => item.path !== "/").map((item) => (
         <Link
           key={item.path}
           to={item.path}
@@ -247,6 +441,7 @@ function MobileNavigation({ closeMenu }) {
           {item.label}
         </Link>
       ))}
+
       <Link
         to="/become-a-client"
         onClick={closeMenu}
@@ -463,19 +658,27 @@ function ServicesSection({ detailed = false }) {
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <Card key={service.title} className="group rounded-[1.75rem] border-navy/5 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-testid={`service-card-${index + 1}`}>
-                <CardContent className="p-0">
-                  <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-2xl bg-teal/10 text-teal transition-transform duration-300 group-hover:scale-105">
-                    <Icon className="h-7 w-7" />
-                  </div>
-                  <h3 className="font-display text-2xl font-semibold text-navy" data-testid={`service-card-${index + 1}-title`}>{service.title}</h3>
-                  <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-summary`}>{service.summary}</p>
-                  {detailed && <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-detail`}>{service.detail}</p>}
-                  <Link to="/services" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-teal" data-testid={`service-card-${index + 1}-learn-more-link`}>
-                    Learn more <Icons.ArrowRight className="h-4 w-4" />
-                  </Link>
-                </CardContent>
-              </Card>
+              <Link
+                key={service.title}
+                to={service.path}
+                className="group block rounded-[1.75rem] focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-4"
+                aria-label={`Learn more about ${service.title}`}
+                data-testid={`service-card-${index + 1}-link`}
+              >
+                <Card className="h-full rounded-[1.75rem] border-navy/5 bg-white p-7 shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:border-teal/20 group-hover:shadow-xl">
+                  <CardContent className="p-0">
+                    <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-2xl bg-teal/10 text-teal transition-transform duration-300 group-hover:scale-105">
+                      <Icon className="h-7 w-7" />
+                    </div>
+                    <h3 className="font-display text-2xl font-semibold text-navy" data-testid={`service-card-${index + 1}-title`}>{service.title}</h3>
+                    <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-summary`}>{service.summary}</p>
+                    {detailed && <p className="mt-4 text-sm leading-relaxed text-navy/70" data-testid={`service-card-${index + 1}-detail`}>{service.detail}</p>}
+                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-teal">
+                      Learn more <Icons.ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>
@@ -820,10 +1023,105 @@ function LeadForm({ kind = "client", title = "Tell us how we can help", compact 
   );
 }
 
+function ServiceDetailPage({ service }) {
+  const Icon = service.icon;
+
+  return (
+    <main data-testid={`${service.title.toLowerCase().replaceAll(" ", "-")}-page-main`}>
+      <PageHero
+        eyebrow={service.shortTitle}
+        title={service.pageTitle}
+        text={service.pageText}
+        image={service.image}
+        testId={`${service.title.toLowerCase().replaceAll(" ", "-")}-page-hero`}
+      />
+
+      <section className="bg-white py-20 md:py-32">
+        <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 md:grid-cols-[0.75fr_1.25fr] md:px-8">
+          <div className="md:sticky md:top-28">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal/10 text-teal">
+              <Icon className="h-8 w-8" />
+            </div>
+            <SectionLabel testId="service-detail-overview-eyebrow">How we help</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl">
+              {service.sectionTitle}
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-navy/75 md:text-lg">
+              {service.sectionText}
+            </p>
+            <Button asChild className="mt-8 rounded-full bg-teal px-8 py-6 font-bold text-white hover:bg-teal-dark">
+              <Link to="/become-a-client">Ask About This Service</Link>
+            </Button>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {service.focusAreas.map(([FocusIcon, title, copy], index) => (
+              <Card key={title} className="rounded-[1.75rem] border-navy/5 bg-slate p-7 shadow-none transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="p-0">
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-teal shadow-sm">
+                    <FocusIcon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-display text-xl font-semibold text-navy">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-navy/70">{copy}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-slate py-20 md:py-32">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+          <div className="mx-auto mb-14 max-w-3xl text-center">
+            <SectionLabel testId="service-detail-process-eyebrow">What to expect</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl">
+              A clear, collaborative process.
+            </h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-4">
+            {service.steps.map((step, index) => (
+              <div key={step} className="rounded-[1.75rem] bg-white p-7 shadow-sm">
+                <div className="mb-7 flex h-11 w-11 items-center justify-center rounded-full bg-navy font-display text-lg font-semibold text-white">
+                  {index + 1}
+                </div>
+                <p className="text-sm leading-relaxed text-navy/75">{step}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 md:py-32">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 md:grid-cols-[0.75fr_1.25fr] md:px-8">
+          <div>
+            <SectionLabel testId="service-detail-faq-eyebrow">Questions families ask</SectionLabel>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-navy md:text-5xl">
+              Helpful answers about {service.title.toLowerCase()}.
+            </h2>
+          </div>
+          <Accordion type="single" collapsible className="rounded-[1.75rem] bg-slate p-4">
+            {service.faqs.map(([question, answer], index) => (
+              <AccordionItem key={question} value={`service-faq-${index}`} className="border-navy/10 px-4">
+                <AccordionTrigger className="py-6 text-left font-display text-lg font-semibold text-navy hover:no-underline">
+                  {question}
+                </AccordionTrigger>
+                <AccordionContent className="pb-6 text-base leading-relaxed text-navy/70">
+                  {answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      <FinalCTA />
+    </main>
+  );
+}
+
 function HomePage() {
   return (
     <>
-      
 
       <main data-testid="homepage-main">
         <Hero />
@@ -844,7 +1142,6 @@ function HomePage() {
 function ServicesPage() {
   return (
     <>
-      
 
       <main data-testid="services-page-main">
         <PageHero
@@ -863,10 +1160,8 @@ function ServicesPage() {
 }
 
 function InsurancePage() {
-  
-    return (
-  <>
-    
+  return (
+    <>
 
     <main data-testid="insurance-page-main">
       <PageHero
@@ -887,9 +1182,9 @@ function InsurancePage() {
         </div>
       </section>
       <FAQSection />
-        </main>
-  </>
-);
+      </main>
+    </>
+  );
 }
 
 function AboutPage() {
@@ -999,7 +1294,7 @@ function Footer() {
           <h3 className="font-display text-lg font-semibold" data-testid="footer-services-heading">Services</h3>
           <div className="mt-4 flex flex-col gap-3">
             {services.map((service) => (
-              <Link key={service.title} to="/services" className="text-sm text-white/70 hover:text-white" data-testid={`footer-service-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}>{service.title}</Link>
+              <Link key={service.title} to={service.path} className="text-sm text-white/70 hover:text-white" data-testid={`footer-service-${service.title.toLowerCase().replaceAll(" ", "-")}-link`}>{service.title}</Link>
             ))}
           </div>
         </div>
@@ -1036,6 +1331,13 @@ function AppShell() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/services" element={<ServicesPage />} />
+        {services.map((service) => (
+          <Route
+            key={service.path}
+            path={service.path}
+            element={<ServiceDetailPage service={service} />}
+          />
+        ))}
         <Route path="/insurance" element={<InsurancePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/careers" element={<CareersPage />} />
