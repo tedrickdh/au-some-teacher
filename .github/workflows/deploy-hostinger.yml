@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
   workflow_dispatch:
 
 permissions:
@@ -14,28 +13,25 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: frontend
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - - name: Set up Node.js
-  uses: actions/setup-node@v4
-  with:
-    node-version: "20"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
       - name: Install dependencies
+        working-directory: frontend
         run: npm install --legacy-peer-deps
 
       - name: Build React website
+        working-directory: frontend
         run: npm run build
 
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
-        working-directory: .
 
       - name: Upload build to Hostinger
         env:
@@ -48,10 +44,6 @@ jobs:
           set net:max-retries 3;
           set net:timeout 20;
           open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
-          mirror --reverse \
-                 --delete \
-                 --verbose \
-                 build/ \
-                 /public_html/;
-          bye
+          mirror --reverse --delete --verbose frontend/build/ /public_html/;
+          bye;
           "
