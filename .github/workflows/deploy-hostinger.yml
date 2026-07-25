@@ -46,7 +46,6 @@ jobs:
           set net:max-retries 3;
           set net:timeout 20;
           open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
-          cd public_html;
-          mirror --reverse --delete --verbose frontend/build/ ./;
+          mirror --reverse --delete --verbose frontend/build/ domains/au-someteacher.com/public_html/;
           bye;
           "
