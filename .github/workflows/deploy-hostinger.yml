@@ -1,4 +1,4 @@
-name: Diagnose Hostinger FTP
+name: Deploy React Site to Hostinger
 
 on:
   push:
@@ -10,19 +10,34 @@ permissions:
   contents: read
 
 jobs:
-  diagnose-hostinger:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+
+      - name: Build React website
+        working-directory: frontend
+        run: yarn build
+
       - name: Install lftp
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
 
-      - name: Inspect Hostinger FTP directories
+      - name: Upload to au-someteacher.com
         env:
           FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
@@ -30,28 +45,17 @@ jobs:
         run: |
           lftp <<EOF
           set ftp:ssl-allow no
+          set cmd:fail-exit yes
           set net:max-retries 3
           set net:timeout 20
 
           open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"
 
-          echo ===== CURRENT FTP DIRECTORY =====
-          pwd
-
-          echo ===== FILES AT FTP ROOT =====
-          cls -la
-
-          echo ===== PUBLIC_HTML CONTENTS =====
-          cls -la public_html
-
-          echo ===== DOMAINS CONTENTS =====
-          cls -la domains
-
-          echo ===== DOMAIN-SPECIFIC DIRECTORY =====
-          cls -la domains/au-someteacher.com
-
-          echo ===== DOMAIN PUBLIC_HTML =====
-          cls -la domains/au-someteacher.com/public_html
+          mirror --reverse \
+            --delete \
+            --verbose \
+            frontend/build/ \
+            domains/au-someteacher.com/public_html/
 
           bye
           EOF
