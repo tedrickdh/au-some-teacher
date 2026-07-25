@@ -35,19 +35,30 @@ jobs:
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: Upload build to Hostinger
-        env:
-          FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
-        run: |
-          lftp -c "
-          set ftp:ssl-allow no;
-          set net:max-retries 3;
-          set net:timeout 20;
-          open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
-          cd domains/au-someteacher.com/public_html;
-          mirror --reverse --delete --verbose frontend/build/ ./;
-          bye;
-          "
-          
+  
+        - name: Diagnose Hostinger FTP path
+  env:
+    FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
+    FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+    FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+  run: |
+    lftp -c "
+    set ftp:ssl-allow no;
+    set cmd:fail-exit yes;
+
+    open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
+
+    echo '===== CURRENT FTP DIRECTORY =====';
+    pwd;
+
+    echo '===== FILES AT FTP ROOT =====';
+    cls -la;
+
+    echo '===== PUBLIC_HTML CONTENTS, IF AVAILABLE =====';
+    cls -la public_html || true;
+
+    echo '===== DOMAINS CONTENTS, IF AVAILABLE =====';
+    cls -la domains || true;
+
+    bye;
+    "
