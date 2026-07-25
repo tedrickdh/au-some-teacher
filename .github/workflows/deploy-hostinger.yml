@@ -1,4 +1,4 @@
-name: Deploy React Site to Hostinger
+name: Diagnose Hostinger FTP
 
 on:
   push:
@@ -10,55 +10,48 @@ permissions:
   contents: read
 
 jobs:
-  build-and-deploy:
+  diagnose-hostinger:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-
-      - name: Install dependencies
-        working-directory: frontend
-        run: yarn install --frozen-lockfile
-
-      - name: Build React website
-        working-directory: frontend
-        run: yarn build
-
       - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
 
-  
-        - name: Diagnose Hostinger FTP path
-  env:
-    FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
-    FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
-    FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
-  run: |
-    lftp -c "
-    set ftp:ssl-allow no;
-    set cmd:fail-exit yes;
+      - name: Inspect Hostinger FTP directories
+        env:
+          FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+        run: |
+          lftp <<EOF
+          set ftp:ssl-allow no
+          set net:max-retries 3
+          set net:timeout 20
 
-    open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
+          open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"
 
-    echo '===== CURRENT FTP DIRECTORY =====';
-    pwd;
+          echo ===== CURRENT FTP DIRECTORY =====
+          pwd
 
-    echo '===== FILES AT FTP ROOT =====';
-    cls -la;
+          echo ===== FILES AT FTP ROOT =====
+          cls -la
 
-    echo '===== PUBLIC_HTML CONTENTS, IF AVAILABLE =====';
-    cls -la public_html || true;
+          echo ===== PUBLIC_HTML CONTENTS =====
+          cls -la public_html
 
-    echo '===== DOMAINS CONTENTS, IF AVAILABLE =====';
-    cls -la domains || true;
+          echo ===== DOMAINS CONTENTS =====
+          cls -la domains
 
-    bye;
-    "
+          echo ===== DOMAIN-SPECIFIC DIRECTORY =====
+          cls -la domains/au-someteacher.com
+
+          echo ===== DOMAIN PUBLIC_HTML =====
+          cls -la domains/au-someteacher.com/public_html
+
+          bye
+          EOF
