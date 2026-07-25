@@ -35,7 +35,7 @@ jobs:
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: Upload build to Hostinger domain root
+      - name: Upload build to Hostinger
         env:
           FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
@@ -46,6 +46,8 @@ jobs:
           set net:max-retries 3;
           set net:timeout 20;
           open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
-          mirror --reverse --delete --verbose frontend/build/ domains/au-someteacher.com/public_html/;
+          cd domains/au-someteacher.com/public_html;
+          mirror --reverse --delete --verbose frontend/build/ ./;
           bye;
           "
+          
