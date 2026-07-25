@@ -45,7 +45,7 @@ jobs:
           set ftp:ssl-allow no;
           set net:max-retries 3;
           set net:timeout 20;
-          open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
-          mirror --reverse --delete --verbose frontend/build/ /public_html/;
+          open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\"
+          mirror --reverse --delete --verbose frontend/build/ /;
           bye;
           "
